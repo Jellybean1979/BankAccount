@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Meridian MS ANG Federal Credit Union</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #f2f2f2;
+    max-width: 420px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background: #fff;
+  }
+
+  /* Top browser bar */
+  .browser-bar {
+    background: #fff;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 13px;
+    color: #444;
+  }
+  .browser-bar .close { font-size: 20px; cursor: pointer; color: #555; }
+  .browser-bar .url { flex: 1; color: #555; font-size: 13px; }
+  .browser-bar .menu { font-size: 20px; color: #555; }
+
+  /* Nav header */
+  .nav-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: #fff;
+    border-bottom: 1px solid #e8e8e8;
+  }
+  .hamburger { font-size: 22px; cursor: pointer; color: #333; }
+  .logo-area {
+    background: linear-gradient(135deg, #1a1a2e, #8b1a1a);
+    padding: 6px 14px;
+    border-radius: 4px;
+    text-align: center;
+  }
+  .logo-area .logo-top { color: #fff; font-size: 9px; font-weight: 600; letter-spacing: 0.5px; }
+  .logo-area .logo-bottom { color: #fff; font-size: 10px; font-weight: 700; letter-spacing: 0.3px; }
+  .nav-icons { display: flex; gap: 10px; }
+  .nav-icons span {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: #f0f0f0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; cursor: pointer;
+  }
+
+  /* Account card */
+  .account-card {
+    background: #3a3a3a;
+    margin: 16px;
+    border-radius: 12px;
+    padding: 20px;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+  .account-card::before {
+    content: '';
+    position: absolute;
+    right: 30px; top: 50%;
+    transform: translateY(-50%) rotate(-15deg);
+    width: 130px; height: 100px;
+    border: 3px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+  }
+  .account-card::after {
+    content: '';
+    position: absolute;
+    right: 45px; top: 45%;
+    transform: translateY(-50%) rotate(-15deg);
+    width: 80px; height: 55px;
+    border: 2px solid rgba(255,255,255,0.06);
+    border-radius: 6px;
+  }
+  .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+  .card-icon {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.12);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+  }
+  .card-title-area { flex: 1; margin-left: 12px; }
+  .card-title-area h2 { font-size: 18px; font-weight: 700; }
+  .card-title-area p { font-size: 12px; color: #aaa; margin-top: 2px; }
+  .card-edit {
+    width: 34px; height: 34px;
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; cursor: pointer;
+  }
+
+  .card-balances { display: flex; justify-content: space-between; margin-bottom: 20px; }
+  .balance-item {}
+  .balance-amount { font-size: 22px; font-weight: 700; }
+  .balance-label { font-size: 11px; color: #aaa; margin-top: 3px; }
+  .balance-item:last-child { text-align: right; }
+
+  .card-footer { display: flex; justify-content: space-between; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 14px; }
+  .footer-item {}
+  .footer-value { font-size: 14px; font-weight: 600; }
+  .footer-label { font-size: 10px; color: #999; margin-top: 3px; }
+  .footer-item:last-child { text-align: right; }
+
+  /* Dots indicator */
+  .dots { display: flex; justify-content: center; gap: 8px; margin: 8px 0 16px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: #ccc; }
+  .dot.active { background: #555; }
+
+  /* Divider */
+  .section-divider { height: 3px; background: #e0e0e0; margin: 0 16px; }
+
+  /* Activity section */
+  .activity-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 16px 8px;
+    font-weight: 700; font-size: 16px; color: #222;
+    cursor: pointer;
+  }
+  .activity-header span { font-size: 20px; color: #555; }
+
+  .last-updated {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 6px 16px 12px;
+    font-size: 12px; font-style: italic; color: #888;
+  }
+  .search-dates {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 12px; color: #555; font-style: normal; cursor: pointer;
+  }
+
+  /* Pending */
+  .pending-total {
+    display: flex; justify-content: space-between;
+    padding: 10px 16px;
+    font-style: italic; color: #555; font-size: 14px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .pending-total span:last-child { font-weight: 600; color: #222; }
+
+  /* Transaction items */
+  .transaction {
+    padding: 12px 16px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .transaction-top { display: flex; justify-content: space-between; align-items: flex-start; }
+  .transaction-name { font-size: 13px; color: #222; font-weight: 500; flex: 1; padding-right: 12px; line-height: 1.4; }
+  .transaction-amount { font-size: 14px; font-weight: 700; white-space: nowrap; }
+  .amount-debit { color: #c0392b; }
+  .amount-credit { color: #27ae60; }
+  .transaction-bottom { display: flex; justify-content: space-between; margin-top: 4px; }
+  .transaction-date { font-size: 12px; color: #888; }
+  .transaction-balance { font-size: 12px; color: #888; }
+  .transaction-status { font-size: 11px; color: #999; font-style: italic; }
+
+  /* Account Summary */
+  .account-summary {
+    margin: 20px 16px 0;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .summary-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 18px;
+    font-weight: 700; font-size: 17px; color: #111;
+    border-bottom: 1px solid #e0e0e0;
+    cursor: pointer;
+  }
+  .summary-header span { font-size: 18px; color: #666; }
+  .summary-col-labels {
+    display: flex; justify-content: space-between;
+    padding: 10px 18px 6px;
+    font-size: 13px; color: #999;
+    border-bottom: 1px solid #eee;
+  }
+  .account-group-header {
+    background: #f5f5f5;
+    padding: 8px 18px;
+    font-size: 13px; color: #444;
+    border-top: 1px solid #e8e8e8;
+    border-bottom: 1px solid #e8e8e8;
+  }
+  .summary-row {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 10px 18px 2px;
+  }
+  .summary-row-name { font-size: 14px; color: #222; }
+  .summary-row-amount { font-size: 14px; color: #222; text-align: right; }
+  .summary-sub-row {
+    display: flex; justify-content: space-between;
+    padding: 1px 18px 10px;
+    border-bottom: 1px solid #f2f2f2;
+  }
+  .summary-sub-suffix { font-size: 13px; color: #777; }
+  .summary-sub-amount { font-size: 13px; color: #777; }
+
+  /* Footer Menu */
+  .footer-menu {
+    margin: 20px 16px 0;
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid #e0e0e0;
+    padding: 20px 18px;
+  }
+  .footer-menu-section { margin-bottom: 20px; }
+  .footer-menu-section:last-child { margin-bottom: 0; }
+  .footer-menu h3 { font-size: 15px; font-weight: 700; color: #111; margin-bottom: 12px; }
+  .footer-menu a {
+    display: block;
+    font-size: 14px; color: #222;
+    padding: 5px 0;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .footer-menu a:hover { text-decoration: underline; }
+  .footer-divider { height: 1px; background: #eee; margin: 20px 0; }
+  .ncua-box {
+    background: #1a3a7c;
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+    margin-top: 10px;
+  }
+  .ncua-tagline { color: #fff; font-size: 11px; font-style: italic; margin-bottom: 10px; line-height: 1.4; }
+  .ncua-logo { font-size: 42px; font-weight: 900; color: #fff; letter-spacing: 2px; margin: 6px 0; }
+  .ncua-subtext { color: #ccd9f0; font-size: 10px; margin-top: 8px; }
+  .ncua-disclaimer { font-size: 12px; color: #555; margin-top: 12px; line-height: 1.5; }
+
+  /* Print button */
+  .print-btn {
+    display: block;
+    margin: 16px 16px 24px;
+    padding: 14px;
+    background: #2c2c2c;
+    color: #fff;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    width: calc(100% - 32px);
+    letter-spacing: 0.3px;
+  }
+  .print-btn:hover { background: #444; }
+
+  /* Quick Transfer */
+  .quick-transfer {
+    margin: 20px 16px 0;
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid #e0e0e0;
+    overflow: hidden;
+  }
+  .qt-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 18px;
+    border-bottom: 1px solid #e8e8e8;
+  }
+  .qt-header-left { display: flex; align-items: center; gap: 10px; }
+  .qt-icon { font-size: 22px; }
+  .qt-title { font-size: 17px; font-weight: 700; color: #111; }
+  .qt-help {
+    width: 30px; height: 30px; border-radius: 50%;
+    border: 2px solid #222;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; font-weight: 700; color: #222; cursor: pointer;
+  }
+  .qt-subtitle {
+    padding: 14px 18px 6px;
+    font-size: 13px; font-style: italic; color: #555;
+  }
+  .qt-body { padding: 10px 18px 18px; }
+  .qt-label { font-size: 14px; font-weight: 600; color: #111; margin: 14px 0 6px; }
+  .qt-select {
+    width: 100%;
+    padding: 14px 16px;
+    background: #f5f5f5;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px; color: #777;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23666' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    cursor: pointer;
+  }
+  .qt-input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px; color: #222;
+    background: #fff;
+    outline: none;
+  }
+  .qt-input:focus { border-color: #888; }
+  .qt-textarea {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px; color: #222;
+    background: #fff;
+    height: 80px;
+    resize: none;
+    outline: none;
+    font-family: inherit;
+  }
+  .qt-textarea:focus { border-color: #888; }
+  .qt-btn {
+    display: block; width: 100%;
+    margin-top: 20px;
+    padding: 16px;
+    background: #111;
+    color: #fff;
+    font-size: 14px; font-weight: 700; letter-spacing: 1.5px;
+    border: none; border-radius: 8px; cursor: pointer;
+    text-align: center;
+  }
+  .qt-btn:hover { background: #333; }
+
+  @media print {
+    .browser-bar, .nav-header, .dots, .print-btn { display: none !important; }
+    body { max-width: 100%; }
+    .account-card { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Browser bar -->
+<div class="browser-bar">
+  <span class="close">✕</span>
+  <div style="flex:1;">
+    <div style="font-weight:600; font-size:13px;">Meridian MS ANG Federal Credit Union</div>
+    <div class="url">cue-branch.com</div>
+  </div>
+  <span class="menu">⋮</span>
+</div>
+
+<!-- Nav header -->
+<div class="nav-header">
+  <span class="hamburger">☰</span>
+  <div class="logo-area">
+    <div class="logo-top">Meridian MS ANG</div>
+    <div class="logo-bottom">Federal Credit Union</div>
+  </div>
+  <div class="nav-icons">
+    <span>🔔</span>
+    <span>👤</span>
+  </div>
+</div>
+
+<!-- Account card -->
+<div class="account-card">
+  <div class="card-header">
+    <div class="card-icon">🏛️</div>
+    <div class="card-title-area">
+      <h2>Skip's checking</h2>
+      <p>1089-71</p>
+    </div>
+    <div class="card-edit">✏️</div>
+  </div>
+
+  <div class="card-balances">
+    <div class="balance-item">
+      <div class="balance-amount">$102.83</div>
+      <div class="balance-label">Current Balance</div>
+    </div>
+    <div class="balance-item">
+      <div class="balance-amount">$82.83</div>
+      <div class="balance-label">Available Balance</div>
+    </div>
+  </div>
+
+  <div class="card-footer">
+    <div class="footer-item">
+      <div class="footer-value">10896</div>
+      <div class="footer-label">Checking Account Number</div>
+    </div>
+    <div class="footer-item">
+      <div class="footer-value">12/17/2009</div>
+      <div class="footer-label">Open Date</div>
+    </div>
+  </div>
+</div>
+
+<!-- Dots -->
+<div class="dots">
+  <div class="dot"></div>
+  <div class="dot"></div>
+  <div class="dot"></div>
+  <div class="dot active"></div>
+  <div class="dot"></div>
+  <div class="dot"></div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- Account Activity -->
+<div class="activity-header">
+  Account Activity
+  <span>∨</span>
+</div>
+
+<div class="last-updated">
+  <span>Last updated 2/19/2026 10:22 AM</span>
+  <div class="search-dates">
+    <span>📅</span> Search Dates
+  </div>
+</div>
+
+<!-- Pending total -->
+<div class="pending-total">
+  <span>Pending Activity Total</span>
+  <span>-$20.00</span>
+</div>
+
+<!-- Transactions -->
+<div class="transaction">
+  <div class="transaction-top">
+    <div class="transaction-name">CASH APP*MAE ELIZABETH Oakland CA CASH APP*MAE ELI</div>
+    <div class="transaction-amount amount-debit">-$20.00</div>
+  </div>
+  <div class="transaction-bottom">
+    <span class="transaction-date">2/19/2026</span>
+    <span class="transaction-status">PENDING</span>
+  </div>
+</div>
+
+<div class="transaction">
+  <div class="transaction-top">
+    <div class="transaction-name">OUT BY CASH</div>
+    <div class="transaction-amount amount-debit">-$30.00</div>
+  </div>
+  <div class="transaction-bottom">
+    <span class="transaction-date">2/19/2026</span>
+    <span class="transaction-balance">$102.83</span>
+  </div>
+</div>
+
+<div class="transaction">
+  <div class="transaction-top">
+    <div class="transaction-name">AMAZON.COM SEATTLE WA AMAZON.COM*KX44I2WM3</div>
+    <div class="transaction-amount amount-debit">-$85.04</div>
+  </div>
+  <div class="transaction-bottom">
+    <span class="transaction-date">2/19/2026</span>
+    <span class="transaction-balance">$132.83</span>
+  </div>
+</div>
+
+<div class="transaction">
+  <div class="transaction-top">
+    <div class="transaction-name">2400 HIGHWAY 19 N MERIDIAN MS WM SUPERCENTER #1271</div>
+    <div class="transaction-amount amount-debit">-$92.33</div>
+  </div>
+  <div class="transaction-bottom">
+    <span class="transaction-date">2/18/2026</span>
+    <span class="transaction-balance">$217.87</span>
+  </div>
+</div>
+
+<div class="transaction">
+  <div class="transaction-top">
+    <div class="transaction-name">CASH APP*GARY LANGLEY*C Oakland CA CASH APP*GARY L</div>
+    <div class="transaction-amount amount-credit">$20.00</div>
+  </div>
+  <div class="transaction-bottom">
+    <span class="transaction-date">2/18/2026</span>
+    <span class="transaction-balance">$310.20</span>
+  </div>
+</div>
+
+
+<!-- Account Summary -->
+<div class="account-summary">
+  <div class="summary-header">
+    Account Summary
+    <span>∨</span>
+  </div>
+  <div class="summary-col-labels">
+    <span>Description</span>
+    <span>Current Balance</span>
+  </div>
+  <div class="summary-col-labels" style="padding-top:2px; padding-bottom:10px;">
+    <span>Suffix</span>
+    <span>Available Balance</span>
+  </div>
+
+  <div class="account-group-header">Account: 1089</div>
+
+  <div class="summary-row">
+    <div class="summary-row-name">Skip's savings</div>
+    <div class="summary-row-amount">$158.60</div>
+  </div>
+  <div class="summary-sub-row">
+    <span class="summary-sub-suffix">0</span>
+    <span class="summary-sub-amount">$133.60</span>
+  </div>
+
+  <div class="summary-row">
+    <div class="summary-row-name">Christmas Club</div>
+    <div class="summary-row-amount">$50.01</div>
+  </div>
+  <div class="summary-sub-row">
+    <span class="summary-sub-suffix">51</span>
+    <span class="summary-sub-amount">$50.01</span>
+  </div>
+
+  <div class="summary-row">
+    <div class="summary-row-name">ESCROW</div>
+    <div class="summary-row-amount">$430.95</div>
+  </div>
+  <div class="summary-sub-row">
+    <span class="summary-sub-suffix">52</span>
+    <span class="summary-sub-amount">$0.00</span>
+  </div>
+
+  <div class="summary-row">
+    <div class="summary-row-name">Skip's checking</div>
+    <div class="summary-row-amount">$82.83</div>
+  </div>
+  <div class="summary-sub-row">
+    <span class="summary-sub-suffix">71</span>
+    <span class="summary-sub-amount">$82.83</span>
+  </div>
+
+  <div class="summary-row">
+    <div class="summary-row-name">MORTGAGE LOAN</div>
+    <div class="summary-row-amount">$11,779.55</div>
+  </div>
+  <div class="summary-sub-row">
+    <span class="summary-sub-suffix">31</span>
+    <span class="summary-sub-amount">$0.00</span>
+  </div>
+
+  <div class="account-group-header">Account: 2787</div>
+
+  <div class="summary-row">
+    <div class="summary-row-name">Vacation fund</div>
+    <div class="summary-row-amount">$72.29</div>
+  </div>
+  <div class="summary-sub-row" style="border-bottom:none;">
+    <span class="summary-sub-suffix">0</span>
+    <span class="summary-sub-amount">$47.29</span>
+  </div>
+</div>
+
+<!-- Quick Transfer -->
+<div class="quick-transfer">
+  <div class="qt-header">
+    <div class="qt-header-left">
+      <span class="qt-icon">⇄</span>
+      <span class="qt-title">Quick Transfer</span>
+    </div>
+    <div class="qt-help">?</div>
+  </div>
+  <div class="qt-subtitle">Move money between your accounts at the credit union.</div>
+  <div class="qt-body">
+    <div class="qt-label">Transfer money from</div>
+    <select class="qt-select">
+      <option value="" disabled selected>— Select an Account —</option>
+      <option>Skip's savings (1089-0) — $133.60</option>
+      <option>Christmas Club (1089-51) — $50.01</option>
+      <option>ESCROW (1089-52) — $430.95</option>
+      <option>Skip's checking (1089-71) — $82.83</option>
+      <option>Vacation fund (2787-0) — $47.29</option>
+    </select>
+
+    <div class="qt-label">Transfer money to</div>
+    <select class="qt-select">
+      <option value="" disabled selected>— Select an Account —</option>
+      <option>Skip's savings (1089-0) — $133.60</option>
+      <option>Christmas Club (1089-51) — $50.01</option>
+      <option>ESCROW (1089-52) — $430.95</option>
+      <option>Skip's checking (1089-71) — $82.83</option>
+      <option>Vacation fund (2787-0) — $47.29</option>
+    </select>
+
+    <div class="qt-label">Amount to transfer</div>
+    <input type="number" class="qt-input" placeholder="" min="0" step="0.01">
+
+    <div class="qt-label">Personal comment</div>
+    <textarea class="qt-textarea" placeholder=""></textarea>
+
+    <button class="qt-btn">TRANSFER</button>
+  </div>
+</div>
+
+<!-- Footer Menu -->
+<div class="footer-menu">
+  <div class="footer-menu-section">
+    <h3>My Account</h3>
+    <a href="#">Account Summary</a>
+    <a href="#">Account Activity</a>
+    <a href="#">Statements</a>
+    <a href="#">Tax Forms</a>
+    <a href="#">Alerts</a>
+    <a href="#">Manage Accounts</a>
+    <a href="#">Account Settings</a>
+  </div>
+
+  <div class="footer-divider"></div>
+
+  <div class="footer-menu-section">
+    <h3>Services</h3>
+    <a href="#">Check Reordering</a>
+  </div>
+
+  <div class="footer-divider"></div>
+
+  <div class="footer-menu-section">
+    <h3>Secure Messages</h3>
+    <a href="#">All Messages</a>
+  </div>
+
+  <div class="footer-divider"></div>
+
+  <div class="footer-menu-section">
+    <h3>Contact Us</h3>
+    <a href="#">6225 M Street Bldg 305 Meridian, MS 39307</a>
+    <a href="mailto:Info@meridianangfcu.org">Info@meridianangfcu.org</a>
+  </div>
+
+  <div class="footer-divider"></div>
+
+  <a href="#" style="font-size:13px; color:#555;">Disclosures</a>
+
+  <div class="ncua-box">
+    <div class="ncua-tagline">Your savings federally insured to at least $250,000<br>and backed by the full faith and credit of the United States Government</div>
+    <div class="ncua-logo">NCUA</div>
+    <div class="ncua-subtext">National Credit Union Administration, a U.S. Government Agency</div>
+  </div>
+  <div class="ncua-disclaimer">This credit union is federally insured by the National Credit Union Administration.</div>
+</div>
+
+<!-- Print Button -->
+<button class="print-btn" onclick="window.print()">🖨️ Print / Save as PDF</button>
+
+</body>
+</html>
