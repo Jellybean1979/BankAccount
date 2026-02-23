@@ -2,374 +2,421 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Meridian MS ANG Federal Credit Union</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font-family: 'Segoe UI', sans-serif;
-    background: #f2f2f2;
-    max-width: 420px;
-    margin: 0 auto;
-    min-height: 100vh;
-    background: #fff;
-  }
 
-  /* Top browser bar */
-  .browser-bar {
-    background: #fff;
-    padding: 10px 16px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    border-bottom: 1px solid #e0e0e0;
-    font-size: 13px;
-    color: #444;
-  }
-  .browser-bar .close { font-size: 20px; cursor: pointer; color: #555; }
-  .browser-bar .url { flex: 1; color: #555; font-size: 13px; }
-  .browser-bar .menu { font-size: 20px; color: #555; }
-
-  /* Nav header */
-  .nav-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 16px;
-    background: #fff;
-    border-bottom: 1px solid #e8e8e8;
-  }
-  .hamburger { font-size: 22px; cursor: pointer; color: #333; }
-  .logo-area {
-    background: linear-gradient(135deg, #1a1a2e, #8b1a1a);
-    padding: 6px 14px;
-    border-radius: 4px;
-    text-align: center;
-  }
-  .logo-area .logo-top { color: #fff; font-size: 9px; font-weight: 600; letter-spacing: 0.5px; }
-  .logo-area .logo-bottom { color: #fff; font-size: 10px; font-weight: 700; letter-spacing: 0.3px; }
-  .nav-icons { display: flex; gap: 10px; }
-  .nav-icons span {
-    width: 36px; height: 36px;
-    border-radius: 50%;
-    background: #f0f0f0;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 16px; cursor: pointer;
-  }
-
-  /* Account card */
-  .account-card {
-    background: #3a3a3a;
-    margin: 16px;
-    border-radius: 12px;
-    padding: 20px;
-    color: #fff;
-    position: relative;
-    overflow: hidden;
-  }
-  .account-card::before {
-    content: '';
-    position: absolute;
-    right: 30px; top: 50%;
-    transform: translateY(-50%) rotate(-15deg);
-    width: 130px; height: 100px;
-    border: 3px solid rgba(255,255,255,0.08);
-    border-radius: 10px;
-  }
-  .account-card::after {
-    content: '';
-    position: absolute;
-    right: 45px; top: 45%;
-    transform: translateY(-50%) rotate(-15deg);
-    width: 80px; height: 55px;
-    border: 2px solid rgba(255,255,255,0.06);
-    border-radius: 6px;
-  }
-  .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
-  .card-icon {
-    width: 44px; height: 44px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.12);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 20px;
-  }
-  .card-title-area { flex: 1; margin-left: 12px; }
-  .card-title-area h2 { font-size: 18px; font-weight: 700; }
-  .card-title-area p { font-size: 12px; color: #aaa; margin-top: 2px; }
-  .card-edit {
-    width: 34px; height: 34px;
-    border: 1px solid rgba(255,255,255,0.3);
-    border-radius: 6px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 14px; cursor: pointer;
-  }
-
-  .card-balances { display: flex; justify-content: space-between; margin-bottom: 20px; }
-  .balance-item {}
-  .balance-amount { font-size: 22px; font-weight: 700; }
-  .balance-label { font-size: 11px; color: #aaa; margin-top: 3px; }
-  .balance-item:last-child { text-align: right; }
-
-  .card-footer { display: flex; justify-content: space-between; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 14px; }
-  .footer-item {}
-  .footer-value { font-size: 14px; font-weight: 600; }
-  .footer-label { font-size: 10px; color: #999; margin-top: 3px; }
-  .footer-item:last-child { text-align: right; }
-
-  /* Dots indicator */
-  .dots { display: flex; justify-content: center; gap: 8px; margin: 8px 0 16px; }
-  .dot { width: 8px; height: 8px; border-radius: 50%; background: #ccc; }
-  .dot.active { background: #555; }
-
-  /* Divider */
-  .section-divider { height: 3px; background: #e0e0e0; margin: 0 16px; }
-
-  /* Activity section */
-  .activity-header {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 16px 16px 8px;
-    font-weight: 700; font-size: 16px; color: #222;
-    cursor: pointer;
-  }
-  .activity-header span { font-size: 20px; color: #555; }
-
-  .last-updated {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 6px 16px 12px;
-    font-size: 12px; font-style: italic; color: #888;
-  }
-  .search-dates {
-    display: flex; align-items: center; gap: 6px;
-    font-size: 12px; color: #555; font-style: normal; cursor: pointer;
-  }
-
-  /* Pending */
-  .pending-total {
-    display: flex; justify-content: space-between;
-    padding: 10px 16px;
-    font-style: italic; color: #555; font-size: 14px;
-    border-bottom: 1px solid #f0f0f0;
-  }
-  .pending-total span:last-child { font-weight: 600; color: #222; }
-
-  /* Transaction items */
-  .transaction {
-    padding: 12px 16px;
-    border-bottom: 1px solid #f0f0f0;
-  }
-  .transaction-top { display: flex; justify-content: space-between; align-items: flex-start; }
-  .transaction-name { font-size: 13px; color: #222; font-weight: 500; flex: 1; padding-right: 12px; line-height: 1.4; }
-  .transaction-amount { font-size: 14px; font-weight: 700; white-space: nowrap; }
-  .amount-debit { color: #c0392b; }
+  body { font-family: 'Segoe UI', sans-serif; color: #222; }
+  .amount-debit  { color: #c0392b; }
   .amount-credit { color: #27ae60; }
-  .transaction-bottom { display: flex; justify-content: space-between; margin-top: 4px; }
-  .transaction-date { font-size: 12px; color: #888; }
-  .transaction-balance { font-size: 12px; color: #888; }
-  .transaction-status { font-size: 11px; color: #999; font-style: italic; }
 
-  /* Account Summary */
-  .account-summary {
-    margin: 20px 16px 0;
-    border: 1px solid #e0e0e0;
-    border-radius: 10px;
-    overflow: hidden;
-    background: #fff;
-  }
-  .summary-header {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 16px 18px;
-    font-weight: 700; font-size: 17px; color: #111;
-    border-bottom: 1px solid #e0e0e0;
-    cursor: pointer;
-  }
-  .summary-header span { font-size: 18px; color: #666; }
-  .summary-col-labels {
-    display: flex; justify-content: space-between;
-    padding: 10px 18px 6px;
-    font-size: 13px; color: #999;
-    border-bottom: 1px solid #eee;
-  }
-  .account-group-header {
-    background: #f5f5f5;
-    padding: 8px 18px;
-    font-size: 13px; color: #444;
-    border-top: 1px solid #e8e8e8;
-    border-bottom: 1px solid #e8e8e8;
-  }
-  .summary-row {
-    display: flex; justify-content: space-between; align-items: baseline;
-    padding: 10px 18px 2px;
-  }
-  .summary-row-name { font-size: 14px; color: #222; }
-  .summary-row-amount { font-size: 14px; color: #222; text-align: right; }
-  .summary-sub-row {
-    display: flex; justify-content: space-between;
-    padding: 1px 18px 10px;
-    border-bottom: 1px solid #f2f2f2;
-  }
-  .summary-sub-suffix { font-size: 13px; color: #777; }
-  .summary-sub-amount { font-size: 13px; color: #777; }
+  /* ═══════════════════════════════════════
+     MOBILE  (max-width: 767px)
+  ═══════════════════════════════════════ */
+  @media (max-width: 767px) {
+    body { background: #fff; max-width: 420px; margin: 0 auto; }
+    .desktop-topbar, .desktop-layout { display: none !important; }
 
-  /* Footer Menu */
-  .footer-menu {
-    margin: 20px 16px 0;
-    background: #fff;
-    border-radius: 10px;
-    border: 1px solid #e0e0e0;
-    padding: 20px 18px;
-  }
-  .footer-menu-section { margin-bottom: 20px; }
-  .footer-menu-section:last-child { margin-bottom: 0; }
-  .footer-menu h3 { font-size: 15px; font-weight: 700; color: #111; margin-bottom: 12px; }
-  .footer-menu a {
-    display: block;
-    font-size: 14px; color: #222;
-    padding: 5px 0;
-    text-decoration: none;
-    cursor: pointer;
-  }
-  .footer-menu a:hover { text-decoration: underline; }
-  .footer-divider { height: 1px; background: #eee; margin: 20px 0; }
-  .ncua-box {
-    background: #1a3a7c;
-    border-radius: 8px;
-    padding: 16px;
-    text-align: center;
-    margin-top: 10px;
-  }
-  .ncua-tagline { color: #fff; font-size: 11px; font-style: italic; margin-bottom: 10px; line-height: 1.4; }
-  .ncua-logo { font-size: 42px; font-weight: 900; color: #fff; letter-spacing: 2px; margin: 6px 0; }
-  .ncua-subtext { color: #ccd9f0; font-size: 10px; margin-top: 8px; }
-  .ncua-disclaimer { font-size: 12px; color: #555; margin-top: 12px; line-height: 1.5; }
+    .browser-bar {
+      background:#fff; padding:10px 16px; display:flex; align-items:center;
+      gap:12px; border-bottom:1px solid #e0e0e0; font-size:13px; color:#444;
+    }
+    .browser-bar .close { font-size:20px; cursor:pointer; color:#555; }
+    .browser-bar .url   { flex:1; color:#555; font-size:13px; }
+    .browser-bar .menu  { font-size:20px; color:#555; }
 
-  /* Print button */
-  .print-btn {
-    display: block;
-    margin: 16px 16px 24px;
-    padding: 14px;
-    background: #2c2c2c;
-    color: #fff;
-    text-align: center;
-    font-size: 15px;
-    font-weight: 600;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    width: calc(100% - 32px);
-    letter-spacing: 0.3px;
-  }
-  .print-btn:hover { background: #444; }
+    .nav-header {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:12px 16px; background:#fff; border-bottom:1px solid #e8e8e8;
+    }
+    .hamburger { font-size:22px; cursor:pointer; color:#333; }
+    .logo-area {
+      background:linear-gradient(135deg,#1a1a2e,#8b1a1a);
+      padding:6px 14px; border-radius:4px; text-align:center;
+    }
+    .logo-area .logo-top    { color:#fff; font-size:9px;  font-weight:600; letter-spacing:0.5px; }
+    .logo-area .logo-bottom { color:#fff; font-size:10px; font-weight:700; letter-spacing:0.3px; }
+    .nav-icons { display:flex; gap:10px; }
+    .nav-icons span {
+      width:36px; height:36px; border-radius:50%; background:#f0f0f0;
+      display:flex; align-items:center; justify-content:center; font-size:16px; cursor:pointer;
+    }
 
-  /* Quick Transfer */
-  .quick-transfer {
-    margin: 20px 16px 0;
-    background: #fff;
-    border-radius: 10px;
-    border: 1px solid #e0e0e0;
-    overflow: hidden;
-  }
-  .qt-header {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 16px 18px;
-    border-bottom: 1px solid #e8e8e8;
-  }
-  .qt-header-left { display: flex; align-items: center; gap: 10px; }
-  .qt-icon { font-size: 22px; }
-  .qt-title { font-size: 17px; font-weight: 700; color: #111; }
-  .qt-help {
-    width: 30px; height: 30px; border-radius: 50%;
-    border: 2px solid #222;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 15px; font-weight: 700; color: #222; cursor: pointer;
-  }
-  .qt-subtitle {
-    padding: 14px 18px 6px;
-    font-size: 13px; font-style: italic; color: #555;
-  }
-  .qt-body { padding: 10px 18px 18px; }
-  .qt-label { font-size: 14px; font-weight: 600; color: #111; margin: 14px 0 6px; }
-  .qt-select {
-    width: 100%;
-    padding: 14px 16px;
-    background: #f5f5f5;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    font-size: 14px; color: #777;
-    appearance: none;
-    -webkit-appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23666' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 16px center;
-    cursor: pointer;
-  }
-  .qt-input {
-    width: 100%;
-    padding: 14px 16px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 14px; color: #222;
-    background: #fff;
-    outline: none;
-  }
-  .qt-input:focus { border-color: #888; }
-  .qt-textarea {
-    width: 100%;
-    padding: 14px 16px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 14px; color: #222;
-    background: #fff;
-    height: 80px;
-    resize: none;
-    outline: none;
-    font-family: inherit;
-  }
-  .qt-textarea:focus { border-color: #888; }
-  .qt-btn {
-    display: block; width: 100%;
-    margin-top: 20px;
-    padding: 16px;
-    background: #111;
-    color: #fff;
-    font-size: 14px; font-weight: 700; letter-spacing: 1.5px;
-    border: none; border-radius: 8px; cursor: pointer;
-    text-align: center;
-  }
-  .qt-btn:hover { background: #333; }
+    .account-card {
+      background:#3a3a3a; margin:16px; border-radius:12px;
+      padding:20px; color:#fff; position:relative; overflow:hidden;
+    }
+    .account-card::before {
+      content:''; position:absolute; right:30px; top:50%;
+      transform:translateY(-50%) rotate(-15deg);
+      width:130px; height:100px; border:3px solid rgba(255,255,255,0.08); border-radius:10px;
+    }
+    .account-card::after {
+      content:''; position:absolute; right:45px; top:45%;
+      transform:translateY(-50%) rotate(-15deg);
+      width:80px; height:55px; border:2px solid rgba(255,255,255,0.06); border-radius:6px;
+    }
+    .card-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
+    .card-icon {
+      width:44px; height:44px; border-radius:50%; background:rgba(255,255,255,0.12);
+      display:flex; align-items:center; justify-content:center; font-size:20px;
+    }
+    .card-title-area { flex:1; margin-left:12px; }
+    .card-title-area h2 { font-size:18px; font-weight:700; }
+    .card-title-area p  { font-size:12px; color:#aaa; margin-top:2px; }
+    .card-edit {
+      width:34px; height:34px; border:1px solid rgba(255,255,255,0.3);
+      border-radius:6px; display:flex; align-items:center; justify-content:center;
+      font-size:14px; cursor:pointer;
+    }
+    .card-balances { display:flex; justify-content:space-between; margin-bottom:20px; }
+    .balance-amount { font-size:22px; font-weight:700; }
+    .balance-label  { font-size:11px; color:#aaa; margin-top:3px; }
+    .balance-item:last-child { text-align:right; }
+    .card-footer {
+      display:flex; justify-content:space-between;
+      border-top:1px solid rgba(255,255,255,0.1); padding-top:14px;
+    }
+    .footer-value { font-size:14px; font-weight:600; }
+    .footer-label { font-size:10px; color:#999; margin-top:3px; }
+    .footer-item:last-child { text-align:right; }
 
+    .dots { display:flex; justify-content:center; gap:8px; margin:8px 0 16px; }
+    .dot  { width:8px; height:8px; border-radius:50%; background:#ccc; }
+    .dot.active { background:#555; }
+    .section-divider { height:3px; background:#e0e0e0; margin:0 16px; }
+
+    .activity-header {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:16px 16px 8px; font-weight:700; font-size:16px; color:#222; cursor:pointer;
+    }
+    .activity-header span { font-size:20px; color:#555; }
+    .last-updated {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:6px 16px 12px; font-size:12px; font-style:italic; color:#888;
+    }
+    .search-dates { display:flex; align-items:center; gap:6px; font-size:12px; color:#555; font-style:normal; cursor:pointer; }
+
+    .transaction { padding:12px 16px; border-bottom:1px solid #f0f0f0; }
+    .transaction-top    { display:flex; justify-content:space-between; align-items:flex-start; }
+    .transaction-name   { font-size:13px; color:#222; font-weight:500; flex:1; padding-right:12px; line-height:1.4; }
+    .transaction-amount { font-size:14px; font-weight:700; white-space:nowrap; }
+    .transaction-bottom { display:flex; justify-content:space-between; margin-top:4px; }
+    .transaction-date    { font-size:12px; color:#888; }
+    .transaction-balance { font-size:12px; color:#888; }
+    .transaction-status  { font-size:11px; color:#999; font-style:italic; }
+
+    .account-summary {
+      margin:20px 16px 0; border:1px solid #e0e0e0;
+      border-radius:10px; overflow:hidden; background:#fff;
+    }
+    .summary-header {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:16px 18px; font-weight:700; font-size:17px; color:#111;
+      border-bottom:1px solid #e0e0e0; cursor:pointer;
+    }
+    .summary-header span { font-size:18px; color:#666; }
+    .summary-col-labels {
+      display:flex; justify-content:space-between;
+      padding:10px 18px 6px; font-size:13px; color:#999; border-bottom:1px solid #eee;
+    }
+    .account-group-header {
+      background:#f5f5f5; padding:8px 18px; font-size:13px; color:#444;
+      border-top:1px solid #e8e8e8; border-bottom:1px solid #e8e8e8;
+    }
+    .summary-row { display:flex; justify-content:space-between; align-items:baseline; padding:10px 18px 2px; }
+    .summary-row-name   { font-size:14px; color:#222; }
+    .summary-row-amount { font-size:14px; color:#222; text-align:right; }
+    .summary-sub-row { display:flex; justify-content:space-between; padding:1px 18px 10px; border-bottom:1px solid #f2f2f2; }
+    .summary-sub-suffix { font-size:13px; color:#777; }
+    .summary-sub-amount { font-size:13px; color:#777; }
+
+    .quick-transfer {
+      margin:20px 16px 0; background:#fff;
+      border-radius:10px; border:1px solid #e0e0e0; overflow:hidden;
+    }
+    .qt-header { display:flex; align-items:center; justify-content:space-between; padding:16px 18px; border-bottom:1px solid #e8e8e8; }
+    .qt-header-left { display:flex; align-items:center; gap:10px; }
+    .qt-icon  { font-size:22px; }
+    .qt-title { font-size:17px; font-weight:700; color:#111; }
+    .qt-help  { width:30px; height:30px; border-radius:50%; border:2px solid #222; display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:700; color:#222; cursor:pointer; }
+    .qt-subtitle { padding:14px 18px 6px; font-size:13px; font-style:italic; color:#555; }
+    .qt-body  { padding:10px 18px 18px; }
+    .qt-label { font-size:14px; font-weight:600; color:#111; margin:14px 0 6px; }
+    .qt-select {
+      width:100%; padding:14px 16px; background:#f5f5f5; border:1px solid #e0e0e0;
+      border-radius:8px; font-size:14px; color:#777; appearance:none; -webkit-appearance:none; cursor:pointer;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23666' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat:no-repeat; background-position:right 16px center;
+    }
+    .qt-input {
+      width:100%; padding:14px 16px; border:1px solid #ccc;
+      border-radius:8px; font-size:14px; color:#222; background:#fff; outline:none;
+    }
+    .qt-input:focus { border-color:#888; }
+    .qt-textarea {
+      width:100%; padding:14px 16px; border:1px solid #ccc; border-radius:8px;
+      font-size:14px; color:#222; background:#fff; height:80px; resize:none; outline:none; font-family:inherit;
+    }
+    .qt-textarea:focus { border-color:#888; }
+    .qt-btn {
+      display:block; width:100%; margin-top:20px; padding:16px;
+      background:#111; color:#fff; font-size:14px; font-weight:700;
+      letter-spacing:1.5px; border:none; border-radius:8px; cursor:pointer; text-align:center;
+    }
+    .qt-btn:hover { background:#333; }
+
+    .footer-menu { margin:20px 16px 0; background:#fff; border-radius:10px; border:1px solid #e0e0e0; padding:20px 18px; }
+    .footer-menu-section { margin-bottom:20px; }
+    .footer-menu h3 { font-size:15px; font-weight:700; color:#111; margin-bottom:12px; }
+    .footer-menu a { display:block; font-size:14px; color:#222; padding:5px 0; text-decoration:none; cursor:pointer; }
+    .footer-menu a:hover { text-decoration:underline; }
+    .footer-divider { height:1px; background:#eee; margin:20px 0; }
+    .ncua-box { background:#1a3a7c; border-radius:8px; padding:16px; text-align:center; margin-top:10px; }
+    .ncua-tagline  { color:#fff; font-size:11px; font-style:italic; margin-bottom:10px; line-height:1.4; }
+    .ncua-logo     { font-size:42px; font-weight:900; color:#fff; letter-spacing:2px; margin:6px 0; }
+    .ncua-subtext  { color:#ccd9f0; font-size:10px; margin-top:8px; }
+    .ncua-disclaimer { font-size:12px; color:#555; margin-top:12px; line-height:1.5; }
+
+    .print-btn {
+      display:block; margin:16px 16px 24px; padding:14px; background:#2c2c2c; color:#fff;
+      text-align:center; font-size:15px; font-weight:600; border-radius:8px;
+      border:none; cursor:pointer; width:calc(100% - 32px); letter-spacing:0.3px;
+    }
+    .print-btn:hover { background:#444; }
+  }
+
+  /* ═══════════════════════════════════════
+     DESKTOP  (min-width: 768px)
+  ═══════════════════════════════════════ */
+  @media (min-width: 768px) {
+    /* hide mobile elements */
+    .browser-bar, .nav-header, .account-card, .dots, .section-divider,
+    .activity-header, .last-updated, .transaction, .account-summary,
+    .quick-transfer, .footer-menu { display:none !important; }
+
+    body { background:#eef1f6; min-height:100vh; }
+
+    /* Top bar */
+    .desktop-topbar {
+      background:linear-gradient(135deg,#1a1a2e,#8b1a1a);
+      display:flex; align-items:center; justify-content:space-between;
+      padding:0 32px; height:60px; position:sticky; top:0; z-index:100;
+      box-shadow:0 2px 8px rgba(0,0,0,0.3);
+    }
+    .topbar-logo { display:flex; flex-direction:column; }
+    .topbar-logo .logo-top    { color:#fff; font-size:10px; font-weight:600; letter-spacing:1px; opacity:0.8; }
+    .topbar-logo .logo-bottom { color:#fff; font-size:15px; font-weight:700; letter-spacing:0.5px; }
+    .topbar-right { display:flex; align-items:center; gap:20px; }
+    .topbar-right span { color:rgba(255,255,255,0.85); font-size:13px; cursor:pointer; }
+    .topbar-right span:hover { color:#fff; }
+    .topbar-user {
+      display:flex; align-items:center; gap:8px;
+      background:rgba(255,255,255,0.14); padding:6px 14px; border-radius:20px; cursor:pointer;
+    }
+    .topbar-user span { color:#fff; font-size:13px; font-weight:600; }
+
+    /* Layout grid */
+    .desktop-layout {
+      display:grid; grid-template-columns:220px 1fr;
+      max-width:1200px; margin:0 auto; padding:24px; gap:24px;
+    }
+
+    /* Sidebar */
+    .desktop-sidebar {
+      background:#fff; border-radius:12px; box-shadow:0 1px 4px rgba(0,0,0,0.08);
+      padding:20px 0; align-self:start; position:sticky; top:84px;
+    }
+    .sidebar-section { padding:0 16px; margin-bottom:6px; }
+    .sidebar-section h4 {
+      font-size:10px; font-weight:700; color:#aaa;
+      letter-spacing:1.2px; text-transform:uppercase; padding:12px 4px 6px;
+    }
+    .sidebar-link {
+      display:flex; align-items:center; gap:10px; padding:9px 10px;
+      border-radius:8px; cursor:pointer; font-size:13px; color:#444;
+      text-decoration:none; transition:background 0.15s;
+    }
+    .sidebar-link:hover  { background:#f5f5f5; color:#111; }
+    .sidebar-link.active { background:#eef2ff; color:#2a3aaa; font-weight:600; }
+    .sidebar-link .icon  { font-size:14px; width:18px; text-align:center; }
+    .sidebar-divider { height:1px; background:#f0f0f0; margin:8px 16px; }
+    .sidebar-contact { padding:10px 20px 4px; }
+    .sidebar-contact p { font-size:11px; color:#999; line-height:1.7; }
+    .sidebar-contact a { font-size:11px; color:#2a5bd7; text-decoration:none; display:block; margin-top:3px; }
+
+    /* Main area */
+    .desktop-main { display:flex; flex-direction:column; gap:20px; min-width:0; }
+
+    .page-title {
+      font-size:20px; font-weight:700; color:#111;
+      border-bottom:2px solid #e4e7ed; padding-bottom:12px;
+    }
+    .page-title small { font-size:12px; font-weight:400; color:#999; margin-left:10px; }
+
+    /* Balance cards */
+    .balance-cards { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+    .balance-card {
+      background:#fff; border-radius:12px; padding:18px 20px;
+      box-shadow:0 1px 4px rgba(0,0,0,0.07); border-left:4px solid #888;
+    }
+    .balance-card.checking { border-left-color:#2a5bd7; }
+    .balance-card.savings  { border-left-color:#27ae60; }
+    .balance-card.vacation { border-left-color:#e67e22; }
+    .bc-label  { font-size:10px; font-weight:700; color:#aaa; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:4px; }
+    .bc-name   { font-size:13px; font-weight:600; color:#444; margin-bottom:10px; }
+    .bc-amount { font-size:24px; font-weight:700; color:#111; }
+    .bc-avail  { font-size:11px; color:#999; margin-top:3px; }
+    .bc-acct   { font-size:10px; color:#bbb; margin-top:8px; }
+
+    /* Two column */
+    .two-col { display:grid; grid-template-columns:1fr 340px; gap:20px; align-items:start; }
+
+    /* Panel */
+    .panel { background:#fff; border-radius:12px; box-shadow:0 1px 4px rgba(0,0,0,0.07); overflow:hidden; }
+    .panel-header {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:14px 20px; border-bottom:1px solid #f0f0f0;
+    }
+    .panel-header h3 { font-size:14px; font-weight:700; color:#111; }
+    .panel-meta { font-size:12px; color:#aaa; font-style:italic; cursor:pointer; }
+
+    /* Transaction table */
+    .txn-table { width:100%; border-collapse:collapse; }
+    .txn-table th {
+      text-align:left; font-size:10px; font-weight:700; color:#aaa;
+      text-transform:uppercase; letter-spacing:0.8px;
+      padding:10px 20px; background:#fafafa; border-bottom:1px solid #eee;
+    }
+    .txn-table th.right { text-align:right; }
+    .txn-table td { padding:12px 20px; border-bottom:1px solid #f5f5f5; font-size:13px; vertical-align:top; }
+    .txn-table tr:last-child td { border-bottom:none; }
+    .txn-table tr:hover td { background:#fafcff; }
+    .txn-name { font-weight:500; color:#222; line-height:1.4; }
+    .txn-sub  { font-size:11px; color:#aaa; }
+    .txn-date { color:#aaa; font-size:12px; white-space:nowrap; }
+    .txn-amt  { font-weight:700; text-align:right; white-space:nowrap; }
+    .txn-bal  { color:#bbb; font-size:12px; text-align:right; white-space:nowrap; }
+
+    /* Right column */
+    .right-col { display:flex; flex-direction:column; gap:20px; }
+
+    /* Account summary table */
+    .as-table { width:100%; border-collapse:collapse; }
+    .as-table .as-head td { font-size:10px; color:#bbb; text-transform:uppercase; letter-spacing:0.7px; padding:10px 18px 6px; border-bottom:1px solid #eee; }
+    .as-table .as-head td:last-child { text-align:right; }
+    .as-table .as-grp td { background:#f7f7f7; font-size:11px; font-weight:700; color:#666; padding:6px 18px; letter-spacing:0.4px; border-top:1px solid #eee; border-bottom:1px solid #eee; }
+    .as-table td { padding:8px 18px; font-size:13px; border-bottom:1px solid #f5f5f5; }
+    .as-table tr:last-child td { border-bottom:none; }
+    .as-table .as-main  { font-weight:600; color:#222; }
+    .as-table .as-sub td { font-size:11px; color:#aaa; padding-top:1px; padding-bottom:9px; }
+    .as-table td:last-child { text-align:right; }
+
+    /* Quick Transfer */
+    .qt-form-desk { padding:14px 18px 18px; }
+    .qt-form-desk .qt-label { font-size:12px; font-weight:600; color:#444; margin:12px 0 5px; }
+    .qt-form-desk .qt-label:first-child { margin-top:0; }
+    .qt-form-desk select, .qt-form-desk input, .qt-form-desk textarea {
+      width:100%; padding:9px 12px; border:1px solid #ddd; border-radius:7px;
+      font-size:13px; color:#333; background:#fafafa; outline:none; font-family:inherit;
+    }
+    .qt-form-desk select {
+      appearance:none; -webkit-appearance:none; cursor:pointer;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23666' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat:no-repeat; background-position:right 12px center;
+    }
+    .qt-form-desk select:focus, .qt-form-desk input:focus, .qt-form-desk textarea:focus { border-color:#2a5bd7; background:#fff; }
+    .qt-form-desk textarea { height:60px; resize:none; }
+    .qt-form-desk button {
+      width:100%; margin-top:12px; padding:11px;
+      background:#1a1a2e; color:#fff; font-size:12px; font-weight:700;
+      letter-spacing:1.2px; border:none; border-radius:7px; cursor:pointer;
+    }
+    .qt-form-desk button:hover { background:#2a2a50; }
+    .qt-note { padding:10px 18px 2px; font-size:11px; font-style:italic; color:#aaa; }
+
+    /* NCUA footer */
+    .desk-footer {
+      background:#fff; border-radius:12px; box-shadow:0 1px 4px rgba(0,0,0,0.07);
+      padding:18px 20px; display:flex; align-items:center; gap:18px;
+    }
+    .ncua-badge { background:#1a3a7c; border-radius:8px; padding:10px 18px; text-align:center; flex-shrink:0; }
+    .ncua-badge .nl { font-size:26px; font-weight:900; color:#fff; letter-spacing:2px; }
+    .ncua-badge .ns { font-size:9px; color:#aac; margin-top:2px; }
+    .desk-footer p { font-size:12px; color:#777; line-height:1.7; flex:1; }
+    .desk-footer a { color:#2a5bd7; text-decoration:none; }
+
+    /* Print button */
+    .print-wrap { display:flex; justify-content:flex-end; }
+    .print-btn {
+      display:inline-flex; align-items:center; gap:8px; padding:10px 22px;
+      background:#2c2c2c; color:#fff; font-size:13px; font-weight:600;
+      border-radius:8px; border:none; cursor:pointer; letter-spacing:0.3px;
+    }
+    .print-btn:hover { background:#444; }
+
+    /* Mobile-only print button hidden on desktop */
+    .mobile-print { display:none !important; }
+  }
+
+  /* ═══════════════════════════════════════
+     PRINT
+  ═══════════════════════════════════════ */
   @media print {
-    .browser-bar, .nav-header, .dots, .print-btn { display: none !important; }
-    body { max-width: 100%; }
-    .account-card { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .browser-bar, .nav-header, .dots, .mobile-print,
+    .desktop-topbar, .desktop-sidebar, .print-wrap { display:none !important; }
+    body { background:#fff; }
+    .desktop-layout { padding:0; gap:12px; }
+    .panel, .desk-footer, .balance-card { box-shadow:none !important; border:1px solid #ddd; }
+    .ncua-badge { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
   }
 </style>
 </head>
 <body>
 
-<!-- Browser bar -->
+<!-- ══════════════════════════════════════
+     DESKTOP TOP BAR
+══════════════════════════════════════ -->
+<div class="desktop-topbar">
+  <div class="topbar-logo">
+    <div class="logo-top">Meridian MS ANG</div>
+    <div class="logo-bottom">Federal Credit Union</div>
+  </div>
+  <div class="topbar-right">
+    <span>🔔 Alerts</span>
+    <span>✉️ Messages</span>
+    <div class="topbar-user"><span>👤</span><span>Gary Langley</span></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     MOBILE BROWSER BAR
+══════════════════════════════════════ -->
 <div class="browser-bar">
   <span class="close">✕</span>
-  <div style="flex:1;">
-    <div style="font-weight:600; font-size:13px;">Meridian MS ANG Federal Credit Union</div>
+  <div style="flex:1">
+    <div style="font-weight:600;font-size:13px;">Meridian MS ANG Federal Credit Union</div>
     <div class="url">cue-branch.com</div>
   </div>
   <span class="menu">⋮</span>
 </div>
 
-<!-- Nav header -->
+<!-- ══════════════════════════════════════
+     MOBILE NAV
+══════════════════════════════════════ -->
 <div class="nav-header">
   <span class="hamburger">☰</span>
   <div class="logo-area">
     <div class="logo-top">Meridian MS ANG</div>
     <div class="logo-bottom">Federal Credit Union</div>
   </div>
-  <div class="nav-icons">
-    <span>🔔</span>
-    <span>👤</span>
-  </div>
+  <div class="nav-icons"><span>🔔</span><span>👤</span></div>
 </div>
 
-<!-- Account card -->
+<!-- ══════════════════════════════════════
+     MOBILE ACCOUNT CARD
+══════════════════════════════════════ -->
 <div class="account-card">
   <div class="card-header">
     <div class="card-icon">🏛️</div>
@@ -379,7 +426,6 @@
     </div>
     <div class="card-edit">✏️</div>
   </div>
-
   <div class="card-balances">
     <div class="balance-item">
       <div class="balance-amount">$17,102.83</div>
@@ -390,193 +436,75 @@
       <div class="balance-label">Available Balance</div>
     </div>
   </div>
-
   <div class="card-footer">
-    <div class="footer-item">
-      <div class="footer-value">10896</div>
-      <div class="footer-label">Checking Account Number</div>
-    </div>
-    <div class="footer-item">
-      <div class="footer-value">12/17/2009</div>
-      <div class="footer-label">Open Date</div>
-    </div>
+    <div class="footer-item"><div class="footer-value">10896</div><div class="footer-label">Checking Account Number</div></div>
+    <div class="footer-item"><div class="footer-value">12/17/2009</div><div class="footer-label">Open Date</div></div>
   </div>
 </div>
 
-<!-- Dots -->
 <div class="dots">
-  <div class="dot"></div>
-  <div class="dot"></div>
-  <div class="dot"></div>
-  <div class="dot active"></div>
-  <div class="dot"></div>
-  <div class="dot"></div>
+  <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+  <div class="dot active"></div><div class="dot"></div><div class="dot"></div>
 </div>
-
 <div class="section-divider"></div>
 
-<!-- Account Activity -->
-<div class="activity-header">
-  Account Activity
-  <span></span>
-</div>
-
+<div class="activity-header">Account Activity <span>∨</span></div>
 <div class="last-updated">
-  <span>Last updated 2/23/2026 10:22 AM</span>
-  <div class="search-dates">
-    <span>📅</span> Search Dates
-  </div>
+  <span>Last updated 2/19/2026 10:22 AM</span>
+  <div class="search-dates"><span>📅</span> Search Dates</div>
 </div>
 
-<!-- Transactions -->
+<!-- Mobile Transactions -->
 <div class="transaction">
-  <div class="transaction-top">
-    <div class="transaction-name">CHECK DEPOSIT - HALL LAW FIRM</div>
-    <div class="transaction-amount amount-credit">$2,000.00</div>
-  </div>
-  <div class="transaction-bottom">
-    <span class="transaction-date">2/23/2026</span>
-    <span class="transaction-balance">$17,102.83</span>
-  </div>
+  <div class="transaction-top"><div class="transaction-name">CHECK DEPOSIT - HALL LAW FIRM</div><div class="transaction-amount amount-credit">$2,000.00</div></div>
+  <div class="transaction-bottom"><span class="transaction-date">2/19/2026</span><span class="transaction-balance">$17,102.83</span></div>
 </div>
-
 <div class="transaction">
-  <div class="transaction-top">
-    <div class="transaction-name">DEPOSIT - ESTATE OF DENNIS LANGLEY</div>
-    <div class="transaction-amount amount-credit">$5,000.00</div>
-  </div>
-  <div class="transaction-bottom">
-    <span class="transaction-date">2/19/2026</span>
-    <span class="transaction-balance">$15,102.83</span>
-  </div>
+  <div class="transaction-top"><div class="transaction-name">DEPOSIT - ESTATE OF DENNIS LANGLEY</div><div class="transaction-amount amount-credit">$5,000.00</div></div>
+  <div class="transaction-bottom"><span class="transaction-date">2/19/2026</span><span class="transaction-balance">$15,102.83</span></div>
 </div>
-
 <div class="transaction">
-  <div class="transaction-top">
-    <div class="transaction-name">OUT BY CASH</div>
-    <div class="transaction-amount amount-debit">-$30.00</div>
-  </div>
-  <div class="transaction-bottom">
-    <span class="transaction-date">2/19/2026</span>
-    <span class="transaction-balance">$10,102.83</span>
-  </div>
+  <div class="transaction-top"><div class="transaction-name">OUT BY CASH</div><div class="transaction-amount amount-debit">-$30.00</div></div>
+  <div class="transaction-bottom"><span class="transaction-date">2/19/2026</span><span class="transaction-balance">$10,102.83</span></div>
 </div>
-
 <div class="transaction">
-  <div class="transaction-top">
-    <div class="transaction-name">AMAZON.COM SEATTLE WA AMAZON.COM*KX44I2WM3</div>
-    <div class="transaction-amount amount-debit">-$85.04</div>
-  </div>
-  <div class="transaction-bottom">
-    <span class="transaction-date">2/19/2026</span>
-    <span class="transaction-balance">$10,132.83</span>
-  </div>
+  <div class="transaction-top"><div class="transaction-name">AMAZON.COM SEATTLE WA AMAZON.COM*KX44I2WM3</div><div class="transaction-amount amount-debit">-$85.04</div></div>
+  <div class="transaction-bottom"><span class="transaction-date">2/19/2026</span><span class="transaction-balance">$10,132.83</span></div>
 </div>
-
 <div class="transaction">
-  <div class="transaction-top">
-    <div class="transaction-name">2400 HIGHWAY 19 N MERIDIAN MS WM SUPERCENTER #1271</div>
-    <div class="transaction-amount amount-debit">-$92.33</div>
-  </div>
-  <div class="transaction-bottom">
-    <span class="transaction-date">2/18/2026</span>
-    <span class="transaction-balance">$10,217.87</span>
-  </div>
+  <div class="transaction-top"><div class="transaction-name">2400 HIGHWAY 19 N MERIDIAN MS WM SUPERCENTER #1271</div><div class="transaction-amount amount-debit">-$92.33</div></div>
+  <div class="transaction-bottom"><span class="transaction-date">2/18/2026</span><span class="transaction-balance">$10,217.87</span></div>
 </div>
-
 <div class="transaction">
-  <div class="transaction-top">
-    <div class="transaction-name">CASH APP*GARY LANGLEY*C Oakland CA CASH APP*GARY L</div>
-    <div class="transaction-amount amount-credit">$20.00</div>
-  </div>
-  <div class="transaction-bottom">
-    <span class="transaction-date">2/18/2026</span>
-    <span class="transaction-balance">$10,310.20</span>
-  </div>
+  <div class="transaction-top"><div class="transaction-name">CASH APP*GARY LANGLEY*C Oakland CA CASH APP*GARY L</div><div class="transaction-amount amount-credit">$20.00</div></div>
+  <div class="transaction-bottom"><span class="transaction-date">2/18/2026</span><span class="transaction-balance">$10,310.20</span></div>
 </div>
 
-
-<!-- Account Summary -->
+<!-- Mobile Account Summary -->
 <div class="account-summary">
-  <div class="summary-header">
-    Account Summary
-    <span></span>
-  </div>
-  <div class="summary-col-labels">
-    <span>Description</span>
-    <span>Current Balance</span>
-  </div>
-  <div class="summary-col-labels" style="padding-top:2px; padding-bottom:10px;">
-    <span>Suffix</span>
-    <span>Available Balance</span>
-  </div>
-
+  <div class="summary-header">Account Summary <span>∨</span></div>
+  <div class="summary-col-labels"><span>Description</span><span>Current Balance</span></div>
+  <div class="summary-col-labels" style="padding-top:2px;padding-bottom:10px;border-bottom:none;"><span>Suffix</span><span>Available Balance</span></div>
   <div class="account-group-header">Account: 1089</div>
-
-  <div class="summary-row">
-    <div class="summary-row-name">Gary Langley's savings</div>
-    <div class="summary-row-amount">$30,158.60</div>
-  </div>
-  <div class="summary-sub-row">
-    <span class="summary-sub-suffix">0</span>
-    <span class="summary-sub-amount">$30,133.60</span>
-  </div>
-
-  <div class="summary-row">
-    <div class="summary-row-name">Christmas Club</div>
-    <div class="summary-row-amount">$50.01</div>
-  </div>
-  <div class="summary-sub-row">
-    <span class="summary-sub-suffix">51</span>
-    <span class="summary-sub-amount">$50.01</span>
-  </div>
-
-  <div class="summary-row">
-    <div class="summary-row-name">ESCROW</div>
-    <div class="summary-row-amount">$430.95</div>
-  </div>
-  <div class="summary-sub-row">
-    <span class="summary-sub-suffix">52</span>
-    <span class="summary-sub-amount">$0.00</span>
-  </div>
-
-  <div class="summary-row">
-    <div class="summary-row-name">Gary Langley's checking</div>
-    <div class="summary-row-amount">$17,102.83</div>
-  </div>
-  <div class="summary-sub-row">
-    <span class="summary-sub-suffix">71</span>
-    <span class="summary-sub-amount">$17,082.83</span>
-  </div>
-
-  <div class="summary-row">
-    <div class="summary-row-name">MORTGAGE LOAN</div>
-    <div class="summary-row-amount">$11,779.55</div>
-  </div>
-  <div class="summary-sub-row">
-    <span class="summary-sub-suffix">31</span>
-    <span class="summary-sub-amount">$0.00</span>
-  </div>
-
+  <div class="summary-row"><div class="summary-row-name">Gary Langley's savings</div><div class="summary-row-amount">$30,158.60</div></div>
+  <div class="summary-sub-row"><span class="summary-sub-suffix">0</span><span class="summary-sub-amount">$30,133.60</span></div>
+  <div class="summary-row"><div class="summary-row-name">Christmas Club</div><div class="summary-row-amount">$50.01</div></div>
+  <div class="summary-sub-row"><span class="summary-sub-suffix">51</span><span class="summary-sub-amount">$50.01</span></div>
+  <div class="summary-row"><div class="summary-row-name">ESCROW</div><div class="summary-row-amount">$430.95</div></div>
+  <div class="summary-sub-row"><span class="summary-sub-suffix">52</span><span class="summary-sub-amount">$0.00</span></div>
+  <div class="summary-row"><div class="summary-row-name">Gary Langley's checking</div><div class="summary-row-amount">$17,102.83</div></div>
+  <div class="summary-sub-row"><span class="summary-sub-suffix">71</span><span class="summary-sub-amount">$17,082.83</span></div>
+  <div class="summary-row"><div class="summary-row-name">MORTGAGE LOAN</div><div class="summary-row-amount">$11,779.55</div></div>
+  <div class="summary-sub-row"><span class="summary-sub-suffix">31</span><span class="summary-sub-amount">$0.00</span></div>
   <div class="account-group-header">Account: 2787</div>
-
-  <div class="summary-row">
-    <div class="summary-row-name">Vacation fund</div>
-    <div class="summary-row-amount">$14,072.29</div>
-  </div>
-  <div class="summary-sub-row" style="border-bottom:none;">
-    <span class="summary-sub-suffix">0</span>
-    <span class="summary-sub-amount">$14,047.29</span>
-  </div>
+  <div class="summary-row"><div class="summary-row-name">Vacation fund</div><div class="summary-row-amount">$14,072.29</div></div>
+  <div class="summary-sub-row" style="border-bottom:none;"><span class="summary-sub-suffix">0</span><span class="summary-sub-amount">$14,047.29</span></div>
 </div>
 
-<!-- Quick Transfer -->
+<!-- Mobile Quick Transfer -->
 <div class="quick-transfer">
   <div class="qt-header">
-    <div class="qt-header-left">
-      <span class="qt-icon">⇄</span>
-      <span class="qt-title">Quick Transfer</span>
-    </div>
+    <div class="qt-header-left"><span class="qt-icon">⇄</span><span class="qt-title">Quick Transfer</span></div>
     <div class="qt-help">?</div>
   </div>
   <div class="qt-subtitle">Move money between your accounts at the credit union.</div>
@@ -590,7 +518,6 @@
       <option>Gary Langley's checking (1089-71) — $17,082.83</option>
       <option>Vacation fund (2787-0) — $14,047.29</option>
     </select>
-
     <div class="qt-label">Transfer money to</div>
     <select class="qt-select">
       <option value="" disabled selected>— Select an Account —</option>
@@ -600,66 +527,261 @@
       <option>Gary Langley's checking (1089-71) — $17,082.83</option>
       <option>Vacation fund (2787-0) — $14,047.29</option>
     </select>
-
     <div class="qt-label">Amount to transfer</div>
     <input type="number" class="qt-input" placeholder="" min="0" step="0.01">
-
     <div class="qt-label">Personal comment</div>
-    <textarea class="qt-textarea" placeholder=""></textarea>
-
+    <textarea class="qt-textarea"></textarea>
     <button class="qt-btn">TRANSFER</button>
   </div>
 </div>
 
-<!-- Footer Menu -->
+<!-- Mobile Footer Menu -->
 <div class="footer-menu">
   <div class="footer-menu-section">
     <h3>My Account</h3>
-    <a href="#">Account Summary</a>
-    <a href="#">Account Activity</a>
-    <a href="#">Statements</a>
-    <a href="#">Tax Forms</a>
-    <a href="#">Alerts</a>
-    <a href="#">Manage Accounts</a>
-    <a href="#">Account Settings</a>
+    <a href="#">Account Summary</a><a href="#">Account Activity</a><a href="#">Statements</a>
+    <a href="#">Tax Forms</a><a href="#">Alerts</a><a href="#">Manage Accounts</a><a href="#">Account Settings</a>
   </div>
-
   <div class="footer-divider"></div>
-
-  <div class="footer-menu-section">
-    <h3>Services</h3>
-    <a href="#">Check Reordering</a>
-  </div>
-
+  <div class="footer-menu-section"><h3>Services</h3><a href="#">Check Reordering</a></div>
   <div class="footer-divider"></div>
-
-  <div class="footer-menu-section">
-    <h3>Secure Messages</h3>
-    <a href="#">All Messages</a>
-  </div>
-
+  <div class="footer-menu-section"><h3>Secure Messages</h3><a href="#">All Messages</a></div>
   <div class="footer-divider"></div>
-
   <div class="footer-menu-section">
     <h3>Contact Us</h3>
     <a href="#">6225 M Street Bldg 305 Meridian, MS 39307</a>
-    <a href="/cdn-cgi/l/email-protection#e4ad8a828ba48981968d808d858a858a83828791ca8b9683"><span class="__cf_email__" data-cfemail="f1b89f979eb19c9483989598909f909f96979284df9e8396">[email&#160;protected]</span></a>
+    <a href="mailto:Info@meridianangfcu.org">Info@meridianangfcu.org</a>
   </div>
-
   <div class="footer-divider"></div>
-
-  <a href="#" style="font-size:13px; color:#555;">Disclosures</a>
-
+  <a href="#" style="font-size:13px;color:#555;">Disclosures</a>
   <div class="ncua-box">
     <div class="ncua-tagline">Your savings federally insured to at least $250,000<br>and backed by the full faith and credit of the United States Government</div>
     <div class="ncua-logo">NCUA</div>
     <div class="ncua-subtext">National Credit Union Administration, a U.S. Government Agency</div>
   </div>
-  <div class="ncua-disclaimer">This credit union is federally insured by the National Credit Union Administration</div>
+  <div class="ncua-disclaimer">This credit union is federally insured by the National Credit Union Administration.</div>
 </div>
 
-<!-- Print Button -->
-<button class="print-btn" onclick="window.print()">🖨️ Print / Save as PDF</button>
+<button class="print-btn mobile-print" onclick="window.print()" style="display:block;margin:16px 16px 24px;width:calc(100% - 32px);">🖨️ Print / Save as PDF</button>
+
+
+<!-- ══════════════════════════════════════
+     DESKTOP LAYOUT
+══════════════════════════════════════ -->
+<div class="desktop-layout">
+
+  <!-- Sidebar -->
+  <aside class="desktop-sidebar">
+    <div class="sidebar-section">
+      <h4>My Account</h4>
+      <a class="sidebar-link active" href="#"><span class="icon">🏠</span> Account Summary</a>
+      <a class="sidebar-link" href="#"><span class="icon">📋</span> Account Activity</a>
+      <a class="sidebar-link" href="#"><span class="icon">📄</span> Statements</a>
+      <a class="sidebar-link" href="#"><span class="icon">🗂️</span> Tax Forms</a>
+      <a class="sidebar-link" href="#"><span class="icon">🔔</span> Alerts</a>
+      <a class="sidebar-link" href="#"><span class="icon">⚙️</span> Manage Accounts</a>
+      <a class="sidebar-link" href="#"><span class="icon">🔧</span> Account Settings</a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <h4>Services</h4>
+      <a class="sidebar-link" href="#"><span class="icon">🗒️</span> Check Reordering</a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <h4>Secure Messages</h4>
+      <a class="sidebar-link" href="#"><span class="icon">✉️</span> All Messages</a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-contact">
+      <h4 style="font-size:10px;font-weight:700;color:#bbb;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:8px;">Contact Us</h4>
+      <p>6225 M Street Bldg 305<br>Meridian, MS 39307</p>
+      <a href="mailto:Info@meridianangfcu.org">Info@meridianangfcu.org</a>
+    </div>
+  </aside>
+
+  <!-- Main content -->
+  <main class="desktop-main">
+
+    <div class="page-title">
+      Account Overview
+      <small>Last updated 2/19/2026 10:22 AM</small>
+    </div>
+
+    <!-- Top balance cards -->
+    <div class="balance-cards">
+      <div class="balance-card checking">
+        <div class="bc-label">Checking</div>
+        <div class="bc-name">Gary Langley's checking</div>
+        <div class="bc-amount">$17,102.83</div>
+        <div class="bc-avail">Available: $17,082.83</div>
+        <div class="bc-acct">Acct #10896 &bull; 1089-71 &bull; Open 12/17/2009</div>
+      </div>
+      <div class="balance-card savings">
+        <div class="bc-label">Savings</div>
+        <div class="bc-name">Gary Langley's savings</div>
+        <div class="bc-amount">$30,158.60</div>
+        <div class="bc-avail">Available: $30,133.60</div>
+        <div class="bc-acct">1089-0</div>
+      </div>
+      <div class="balance-card vacation">
+        <div class="bc-label">Savings</div>
+        <div class="bc-name">Vacation fund</div>
+        <div class="bc-amount">$14,072.29</div>
+        <div class="bc-avail">Available: $14,047.29</div>
+        <div class="bc-acct">2787-0</div>
+      </div>
+    </div>
+
+    <!-- Two-column content -->
+    <div class="two-col">
+
+      <!-- Activity table -->
+      <div class="panel">
+        <div class="panel-header">
+          <h3>Account Activity — Gary Langley's checking</h3>
+          <span class="panel-meta">📅 Search Dates</span>
+        </div>
+        <table class="txn-table">
+          <thead>
+            <tr>
+              <th>Description</th>
+              <th>Date</th>
+              <th class="right">Amount</th>
+              <th class="right">Balance</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><div class="txn-name">CHECK DEPOSIT - HALL LAW FIRM</div></td>
+              <td class="txn-date">2/19/2026</td>
+              <td class="txn-amt amount-credit">$2,000.00</td>
+              <td class="txn-bal">$17,102.83</td>
+            </tr>
+            <tr>
+              <td><div class="txn-name">DEPOSIT - ESTATE OF DENNIS LANGLEY</div></td>
+              <td class="txn-date">2/19/2026</td>
+              <td class="txn-amt amount-credit">$5,000.00</td>
+              <td class="txn-bal">$15,102.83</td>
+            </tr>
+            <tr>
+              <td><div class="txn-name">OUT BY CASH</div></td>
+              <td class="txn-date">2/19/2026</td>
+              <td class="txn-amt amount-debit">-$30.00</td>
+              <td class="txn-bal">$10,102.83</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="txn-name">AMAZON.COM SEATTLE WA</div>
+                <div class="txn-sub">AMAZON.COM*KX44I2WM3</div>
+              </td>
+              <td class="txn-date">2/19/2026</td>
+              <td class="txn-amt amount-debit">-$85.04</td>
+              <td class="txn-bal">$10,132.83</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="txn-name">WM SUPERCENTER #1271</div>
+                <div class="txn-sub">2400 Highway 19 N, Meridian MS</div>
+              </td>
+              <td class="txn-date">2/18/2026</td>
+              <td class="txn-amt amount-debit">-$92.33</td>
+              <td class="txn-bal">$10,217.87</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="txn-name">CASH APP*GARY LANGLEY</div>
+                <div class="txn-sub">Oakland CA</div>
+              </td>
+              <td class="txn-date">2/18/2026</td>
+              <td class="txn-amt amount-credit">$20.00</td>
+              <td class="txn-bal">$10,310.20</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Right column -->
+      <div class="right-col">
+
+        <!-- Account Summary -->
+        <div class="panel">
+          <div class="panel-header"><h3>Account Summary</h3></div>
+          <table class="as-table">
+            <tr class="as-head"><td>Account</td><td>Current / Available</td></tr>
+            <tr class="as-grp"><td colspan="2">Account: 1089</td></tr>
+            <tr><td class="as-main">Gary Langley's savings</td><td>$30,158.60</td></tr>
+            <tr class="as-sub"><td>Suffix 0 — Available</td><td>$30,133.60</td></tr>
+            <tr><td class="as-main">Christmas Club</td><td>$50.01</td></tr>
+            <tr class="as-sub"><td>Suffix 51 — Available</td><td>$50.01</td></tr>
+            <tr><td class="as-main">ESCROW</td><td>$430.95</td></tr>
+            <tr class="as-sub"><td>Suffix 52 — Available</td><td>$0.00</td></tr>
+            <tr><td class="as-main">Gary Langley's checking</td><td>$17,102.83</td></tr>
+            <tr class="as-sub"><td>Suffix 71 — Available</td><td>$17,082.83</td></tr>
+            <tr><td class="as-main">MORTGAGE LOAN</td><td>$11,779.55</td></tr>
+            <tr class="as-sub"><td>Suffix 31 — Available</td><td>$0.00</td></tr>
+            <tr class="as-grp"><td colspan="2">Account: 2787</td></tr>
+            <tr><td class="as-main">Vacation fund</td><td>$14,072.29</td></tr>
+            <tr class="as-sub"><td>Suffix 0 — Available</td><td>$14,047.29</td></tr>
+          </table>
+        </div>
+
+        <!-- Quick Transfer -->
+        <div class="panel">
+          <div class="panel-header">
+            <h3>⇄ Quick Transfer</h3>
+            <span style="font-size:17px;cursor:pointer;color:#aaa;border:2px solid #ccc;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;">?</span>
+          </div>
+          <p class="qt-note">Move money between your accounts at the credit union.</p>
+          <div class="qt-form-desk">
+            <div class="qt-label">Transfer money from</div>
+            <select>
+              <option value="" disabled selected>— Select an Account —</option>
+              <option>Gary Langley's savings (1089-0) — $30,133.60</option>
+              <option>Christmas Club (1089-51) — $50.01</option>
+              <option>ESCROW (1089-52) — $430.95</option>
+              <option>Gary Langley's checking (1089-71) — $17,082.83</option>
+              <option>Vacation fund (2787-0) — $14,047.29</option>
+            </select>
+            <div class="qt-label">Transfer money to</div>
+            <select>
+              <option value="" disabled selected>— Select an Account —</option>
+              <option>Gary Langley's savings (1089-0) — $30,133.60</option>
+              <option>Christmas Club (1089-51) — $50.01</option>
+              <option>ESCROW (1089-52) — $430.95</option>
+              <option>Gary Langley's checking (1089-71) — $17,082.83</option>
+              <option>Vacation fund (2787-0) — $14,047.29</option>
+            </select>
+            <div class="qt-label">Amount to transfer</div>
+            <input type="number" placeholder="$0.00" min="0" step="0.01">
+            <div class="qt-label">Personal comment</div>
+            <textarea placeholder="Optional note..."></textarea>
+            <button>TRANSFER</button>
+          </div>
+        </div>
+
+      </div><!-- /right-col -->
+    </div><!-- /two-col -->
+
+    <!-- NCUA + Print -->
+    <div class="desk-footer">
+      <div class="ncua-badge">
+        <div class="nl">NCUA</div>
+        <div class="ns">Federally Insured</div>
+      </div>
+      <p>
+        Your savings are federally insured to at least <strong>$250,000</strong> and backed by the full faith and credit of the United States Government.
+        This credit union is federally insured by the <strong>National Credit Union Administration</strong>, a U.S. Government Agency.<br>
+        <a href="#">Disclosures</a> &bull; 6225 M Street Bldg 305, Meridian MS 39307 &bull;
+        <a href="mailto:Info@meridianangfcu.org">Info@meridianangfcu.org</a>
+      </p>
+      <div class="print-wrap">
+        <button class="print-btn" onclick="window.print()">🖨️ Print / Save as PDF</button>
+      </div>
+    </div>
+
+  </main>
+</div><!-- /desktop-layout -->
 
 </body>
 </html>
