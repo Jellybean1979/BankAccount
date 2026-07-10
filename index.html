@@ -468,11 +468,11 @@
   </div>
   <div class="card-balances">
     <div class="balance-item">
-      <div class="balance-amount" id="mobileCurrentBalance">$17,102.83</div>
+      <div class="balance-amount" id="mobileCurrentBalance">$3,000.00</div>
       <div class="balance-label">Current Balance</div>
     </div>
     <div class="balance-item">
-      <div class="balance-amount" id="mobileAvailableBalance">$17,082.83</div>
+      <div class="balance-amount" id="mobileAvailableBalance">$2,980.00</div>
       <div class="balance-label">Available Balance</div>
     </div>
   </div>
@@ -514,22 +514,12 @@
   <div class="qt-subtitle">Move money between your accounts at the credit union.</div>
   <div class="qt-body">
     <div class="qt-label">Transfer money from</div>
-    <select class="qt-select">
+    <select class="qt-select" id="mobileTransferFrom">
       <option value="" disabled selected>— Select an Account —</option>
-      <option>Gary Langley's savings (1089-0) — $30,133.60</option>
-      <option>Christmas Club (1089-51) — $50.01</option>
-      <option>ESCROW (1089-52) — $430.95</option>
-      <option>Gary Langley's checking (1089-71) — $17,082.83</option>
-      <option>Vacation fund (2787-0) — $14,047.29</option>
     </select>
     <div class="qt-label">Transfer money to</div>
-    <select class="qt-select">
+    <select class="qt-select" id="mobileTransferTo">
       <option value="" disabled selected>— Select an Account —</option>
-      <option>Gary Langley's savings (1089-0) — $30,133.60</option>
-      <option>Christmas Club (1089-51) — $50.01</option>
-      <option>ESCROW (1089-52) — $430.95</option>
-      <option>Gary Langley's checking (1089-71) — $3,000</option>
-      <option>Vacation fund (2787-0) — $14,047.29</option>
     </select>
     <div class="qt-label">Amount to transfer</div>
     <input type="number" class="qt-input" placeholder="" min="0" step="0.01">
@@ -560,6 +550,7 @@
   </div>
   <div class="footer-divider"></div>
   <a href="#" style="font-size:13px;color:#555;">Disclosures</a>
+  <a href="#" id="mobileResetLink" style="font-size:12px;color:#aaa;margin-top:4px;">Reset demo data to defaults</a>
   <div class="ncua-box">
     <div class="ncua-tagline">Your savings federally insured to at least $250,000<br>and backed by the full faith and credit of the United States Government</div>
     <div class="ncua-logo">NCUA</div>
@@ -603,6 +594,7 @@
       <h4 style="font-size:10px;font-weight:700;color:#bbb;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:8px;">Contact Us</h4>
       <p>6225 M Street Bldg 305<br>Meridian, MS 39307</p>
       <a href="mailto:Info@meridianangfcu.org">Info@meridianangfcu.org</a>
+      <a href="#" id="desktopResetLink" style="font-size:11px;color:#ccc;margin-top:10px;">Reset demo data to defaults</a>
     </div>
   </aside>
 
@@ -619,8 +611,8 @@
       <div class="balance-card checking">
         <div class="bc-label">Checking</div>
         <div class="bc-name">Gary Langley's checking</div>
-        <div class="bc-amount" id="desktopCheckingAmount">$17,102.83</div>
-        <div class="bc-avail" id="desktopCheckingAvail">Available: $17,082.83</div>
+        <div class="bc-amount" id="desktopCheckingAmount">$3,000.00</div>
+        <div class="bc-avail" id="desktopCheckingAvail">Available: $2,980.00</div>
         <div class="bc-acct">Acct #10896 &bull; 1089-71 &bull; Open 12/17/2009</div>
       </div>
       <div class="balance-card savings">
@@ -682,22 +674,12 @@
           <p class="qt-note">Move money between your accounts at the credit union.</p>
           <div class="qt-form-desk">
             <div class="qt-label">Transfer money from</div>
-            <select>
+            <select id="desktopTransferFrom">
               <option value="" disabled selected>— Select an Account —</option>
-              <option>Gary Langley's savings (1089-0) — $30,133.60</option>
-              <option>Christmas Club (1089-51) — $50.01</option>
-              <option>ESCROW (1089-52) — $430.95</option>
-              <option>Gary Langley's checking (1089-71) — $17,082.83</option>
-              <option>Vacation fund (2787-0) — $14,047.29</option>
             </select>
             <div class="qt-label">Transfer money to</div>
-            <select>
+            <select id="desktopTransferTo">
               <option value="" disabled selected>— Select an Account —</option>
-              <option>Gary Langley's savings (1089-0) — $30,133.60</option>
-              <option>Christmas Club (1089-51) — $50.01</option>
-              <option>ESCROW (1089-52) — $430.95</option>
-              <option>Gary Langley's checking (1089-71) — $17,082.83</option>
-              <option>Vacation fund (2787-0) — $14,047.29</option>
             </select>
             <div class="qt-label">Amount to transfer</div>
             <input type="number" placeholder="$0.00" min="0" step="0.01">
@@ -831,7 +813,7 @@
   // DATA MODEL
   // ─────────────────────────────────────────
   let checkingData = {
-    startingBalance: 10290.20,   // balance immediately before the oldest listed transaction
+    startingBalance: -3812.63,   // balance immediately before the oldest listed transaction (defaults checking to $3,000.00)
     pendingHold: 20.00,          // difference between current and available balance
     transactions: [
       { id: 1, date: '2026-02-18', description: "CASH APP*GARY LANGLEY*C Oakland CA CASH APP*GARY L", amount: 20.00 },
@@ -853,6 +835,39 @@
   const vacationAccount = { name: "Vacation fund", suffix: '0', current: 14072.29, available: 14047.29 };
 
   let workingTransactions = [];
+
+  const STORAGE_KEY = 'meridianBankData';
+
+  // ─────────────────────────────────────────
+  // PERSISTENCE (browser local storage)
+  // ─────────────────────────────────────────
+  function saveStateToStorage() {
+    try {
+      const state = { checkingData, otherAccounts, nextTxnId };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch (e) {
+      console.warn('Could not save data locally:', e);
+    }
+  }
+
+  function loadStateFromStorage() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const state = JSON.parse(raw);
+      if (state && state.checkingData && Array.isArray(state.checkingData.transactions)) {
+        checkingData = state.checkingData;
+      }
+      if (state && state.otherAccounts) {
+        otherAccounts = state.otherAccounts;
+      }
+      if (state && typeof state.nextTxnId === 'number') {
+        nextTxnId = state.nextTxnId;
+      }
+    } catch (e) {
+      console.warn('Could not load saved data, using defaults:', e);
+    }
+  }
 
   // ─────────────────────────────────────────
   // HELPERS
@@ -935,6 +950,24 @@
     }
 
     renderSummaries(current, available);
+    renderQuickTransferOptions(available);
+  }
+
+  function renderQuickTransferOptions(checkingAvailable) {
+    const accounts = [
+      { key: 'savings',   label: "Gary Langley's savings (1089-0)",   available: otherAccounts.savings.available },
+      { key: 'christmas', label: "Christmas Club (1089-51)",          available: otherAccounts.christmas.available },
+      { key: 'escrow',    label: "ESCROW (1089-52)",                  available: otherAccounts.escrow.available },
+      { key: 'checking',  label: "Gary Langley's checking (1089-71)", available: checkingAvailable },
+      { key: 'vacation',  label: "Vacation fund (2787-0)",            available: vacationAccount.available }
+    ];
+
+    ['mobileTransferFrom', 'mobileTransferTo', 'desktopTransferFrom', 'desktopTransferTo'].forEach(id => {
+      const sel = document.getElementById(id);
+      const prevKey = sel.value;
+      sel.innerHTML = `<option value="" disabled ${prevKey ? '' : 'selected'}>— Select an Account —</option>` +
+        accounts.map(a => `<option value="${a.key}" ${a.key === prevKey ? 'selected' : ''}>${escapeHtml(a.label)} — ${formatCurrency(a.available)}</option>`).join('');
+    });
   }
 
   function renderSummaries(checkingCurrent, checkingAvailable) {
@@ -1097,6 +1130,7 @@
   document.getElementById('saveAccountSettingsBtn').addEventListener('click', () => {
     checkingData.transactions = workingTransactions.map(t => ({ ...t }));
     renderAll();
+    saveStateToStorage();
     closeModal('accountSettingsModal');
   });
 
@@ -1133,6 +1167,7 @@
     }
 
     renderAll();
+    saveStateToStorage();
     closeModal('manageAccountsModal');
   });
 
@@ -1141,8 +1176,24 @@
   });
 
   // ─────────────────────────────────────────
+  // RESET TO DEFAULTS
+  // ─────────────────────────────────────────
+  function resetAllData() {
+    if (!confirm('Reset all balances and transactions back to the original demo data? Saved changes will be lost.')) return;
+    try { localStorage.removeItem(STORAGE_KEY); } catch (e) { /* ignore */ }
+    location.reload();
+  }
+  ['mobileResetLink', 'desktopResetLink'].forEach(id => {
+    document.getElementById(id).addEventListener('click', e => {
+      e.preventDefault();
+      resetAllData();
+    });
+  });
+
+  // ─────────────────────────────────────────
   // INIT
   // ─────────────────────────────────────────
+  loadStateFromStorage();
   renderAll();
 })();
 </script>
