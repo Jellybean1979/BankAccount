@@ -365,12 +365,52 @@
   ═══════════════════════════════════════ */
   @media print {
     .browser-bar, .nav-header, .dots, .mobile-print,
-    .desktop-topbar, .desktop-sidebar, .print-wrap { display:none !important; }
+    .desktop-topbar, .desktop-sidebar, .print-wrap, .modal-overlay { display:none !important; }
     body { background:#fff; }
     .desktop-layout { padding:0; gap:12px; }
     .panel, .desk-footer, .balance-card { box-shadow:none !important; border:1px solid #ddd; }
     .ncua-badge { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
   }
+
+  /* ═══════════════════════════════════════
+     MODALS
+  ═══════════════════════════════════════ */
+  .modal-overlay { position:fixed; inset:0; background:rgba(20,20,30,0.55); display:none; align-items:center; justify-content:center; z-index:1000; padding:20px; }
+  .modal-overlay.active { display:flex; }
+  .modal-box { background:#fff; border-radius:14px; max-width:460px; width:100%; max-height:85vh; overflow-y:auto; padding:22px 22px 20px; box-shadow:0 20px 60px rgba(0,0,0,0.35); }
+  .modal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:4px; }
+  .modal-header h2 { font-size:18px; font-weight:700; color:#111; }
+  .modal-close { font-size:18px; color:#888; cursor:pointer; padding:4px; line-height:1; }
+  .modal-close:hover { color:#333; }
+  .modal-sub { font-size:12px; color:#888; margin-bottom:16px; line-height:1.5; }
+  .modal-section { margin-bottom:16px; padding-bottom:16px; border-bottom:1px solid #f0f0f0; }
+  .modal-section:last-of-type { border-bottom:none; margin-bottom:0; padding-bottom:0; }
+  .modal-section-title { font-size:13px; font-weight:700; color:#333; margin-bottom:8px; }
+  .modal-txn-list { max-height:260px; overflow-y:auto; border:1px solid #eee; border-radius:8px; }
+  .modal-txn-empty { padding:20px; text-align:center; font-size:12px; color:#aaa; font-style:italic; }
+  .modal-txn-row { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 12px; border-bottom:1px solid #f2f2f2; }
+  .modal-txn-row:last-child { border-bottom:none; }
+  .modal-txn-desc { font-size:13px; color:#222; font-weight:500; }
+  .modal-txn-meta { font-size:11px; color:#999; margin-top:2px; }
+  .modal-txn-delete { cursor:pointer; font-size:14px; padding:4px 8px; opacity:0.65; flex-shrink:0; }
+  .modal-txn-delete:hover { opacity:1; }
+  .modal-add-btn { display:block; width:100%; margin-top:14px; padding:11px; background:#f0f4ff; color:#2a3aaa; border:1px dashed #b8c4f0; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; }
+  .modal-add-btn:hover { background:#e6ecff; }
+  .modal-add-form { margin-top:14px; padding:14px; background:#fafafa; border-radius:8px; border:1px solid #eee; }
+  .modal-label { font-size:12px; font-weight:600; color:#444; margin:10px 0 5px; }
+  .modal-label:first-child { margin-top:0; }
+  .modal-input {
+    width:100%; padding:10px 12px; border:1px solid #ddd; border-radius:7px;
+    font-size:13px; color:#222; background:#fff; outline:none; font-family:inherit;
+  }
+  .modal-input:focus { border-color:#2a5bd7; }
+  .modal-add-actions { display:flex; gap:8px; margin-top:12px; }
+  .modal-footer { display:flex; gap:10px; margin-top:18px; }
+  .modal-btn-primary, .modal-btn-secondary { flex:1; padding:12px; border-radius:8px; border:none; font-size:13px; font-weight:700; cursor:pointer; letter-spacing:0.3px; }
+  .modal-btn-primary { background:#1a1a2e; color:#fff; }
+  .modal-btn-primary:hover { background:#2a2a50; }
+  .modal-btn-secondary { background:#f0f0f0; color:#444; }
+  .modal-btn-secondary:hover { background:#e4e4e4; }
 </style>
 </head>
 <body>
@@ -428,11 +468,11 @@
   </div>
   <div class="card-balances">
     <div class="balance-item">
-      <div class="balance-amount">$17,102.83</div>
+      <div class="balance-amount" id="mobileCurrentBalance">$17,102.83</div>
       <div class="balance-label">Current Balance</div>
     </div>
     <div class="balance-item">
-      <div class="balance-amount">$17,082.83</div>
+      <div class="balance-amount" id="mobileAvailableBalance">$17,082.83</div>
       <div class="balance-label">Available Balance</div>
     </div>
   </div>
@@ -454,51 +494,15 @@
   <div class="search-dates"><span>📅</span> Search Dates</div>
 </div>
 
-<!-- Mobile Transactions -->
-<div class="transaction">
-  <div class="transaction-top"><div class="transaction-name">CHECK DEPOSIT - HALL LAW FIRM</div><div class="transaction-amount amount-credit">$2,000.00</div></div>
-  <div class="transaction-bottom"><span class="transaction-date">2/19/2026</span><span class="transaction-balance">$17,102.83</span></div>
-</div>
-<div class="transaction">
-  <div class="transaction-top"><div class="transaction-name">DEPOSIT - ESTATE OF DENNIS LANGLEY</div><div class="transaction-amount amount-credit">$5,000.00</div></div>
-  <div class="transaction-bottom"><span class="transaction-date">2/19/2026</span><span class="transaction-balance">$15,102.83</span></div>
-</div>
-<div class="transaction">
-  <div class="transaction-top"><div class="transaction-name">OUT BY CASH</div><div class="transaction-amount amount-debit">-$30.00</div></div>
-  <div class="transaction-bottom"><span class="transaction-date">2/19/2026</span><span class="transaction-balance">$10,102.83</span></div>
-</div>
-<div class="transaction">
-  <div class="transaction-top"><div class="transaction-name">AMAZON.COM SEATTLE WA AMAZON.COM*KX44I2WM3</div><div class="transaction-amount amount-debit">-$85.04</div></div>
-  <div class="transaction-bottom"><span class="transaction-date">2/19/2026</span><span class="transaction-balance">$10,132.83</span></div>
-</div>
-<div class="transaction">
-  <div class="transaction-top"><div class="transaction-name">2400 HIGHWAY 19 N MERIDIAN MS WM SUPERCENTER #1271</div><div class="transaction-amount amount-debit">-$92.33</div></div>
-  <div class="transaction-bottom"><span class="transaction-date">2/18/2026</span><span class="transaction-balance">$10,217.87</span></div>
-</div>
-<div class="transaction">
-  <div class="transaction-top"><div class="transaction-name">CASH APP*GARY LANGLEY*C Oakland CA CASH APP*GARY L</div><div class="transaction-amount amount-credit">$20.00</div></div>
-  <div class="transaction-bottom"><span class="transaction-date">2/18/2026</span><span class="transaction-balance">$10,310.20</span></div>
-</div>
+<!-- Mobile Transactions (rendered by JS) -->
+<div id="mobileTransactions"></div>
 
 <!-- Mobile Account Summary -->
 <div class="account-summary">
   <div class="summary-header">Account Summary <span>∨</span></div>
   <div class="summary-col-labels"><span>Description</span><span>Current Balance</span></div>
   <div class="summary-col-labels" style="padding-top:2px;padding-bottom:10px;border-bottom:none;"><span>Suffix</span><span>Available Balance</span></div>
-  <div class="account-group-header">Account: 1089</div>
-  <div class="summary-row"><div class="summary-row-name">Gary Langley's savings</div><div class="summary-row-amount">$30,158.60</div></div>
-  <div class="summary-sub-row"><span class="summary-sub-suffix">0</span><span class="summary-sub-amount">$30,133.60</span></div>
-  <div class="summary-row"><div class="summary-row-name">Christmas Club</div><div class="summary-row-amount">$50.01</div></div>
-  <div class="summary-sub-row"><span class="summary-sub-suffix">51</span><span class="summary-sub-amount">$50.01</span></div>
-  <div class="summary-row"><div class="summary-row-name">ESCROW</div><div class="summary-row-amount">$430.95</div></div>
-  <div class="summary-sub-row"><span class="summary-sub-suffix">52</span><span class="summary-sub-amount">$0.00</span></div>
-  <div class="summary-row"><div class="summary-row-name">Gary Langley's checking</div><div class="summary-row-amount">$17,102.83</div></div>
-  <div class="summary-sub-row"><span class="summary-sub-suffix">71</span><span class="summary-sub-amount">$17,082.83</span></div>
-  <div class="summary-row"><div class="summary-row-name">MORTGAGE LOAN</div><div class="summary-row-amount">$11,779.55</div></div>
-  <div class="summary-sub-row"><span class="summary-sub-suffix">31</span><span class="summary-sub-amount">$0.00</span></div>
-  <div class="account-group-header">Account: 2787</div>
-  <div class="summary-row"><div class="summary-row-name">Vacation fund</div><div class="summary-row-amount">$14,072.29</div></div>
-  <div class="summary-sub-row" style="border-bottom:none;"><span class="summary-sub-suffix">0</span><span class="summary-sub-amount">$14,047.29</span></div>
+  <div id="mobileSummaryBody"></div>
 </div>
 
 <!-- Mobile Quick Transfer -->
@@ -540,7 +544,9 @@
   <div class="footer-menu-section">
     <h3>My Account</h3>
     <a href="#">Account Summary</a><a href="#">Account Activity</a><a href="#">Statements</a>
-    <a href="#">Tax Forms</a><a href="#">Alerts</a><a href="#">Manage Accounts</a><a href="#">Account Settings</a>
+    <a href="#">Tax Forms</a><a href="#">Alerts</a>
+    <a href="#" id="mobileManageAccountsLink">Manage Accounts</a>
+    <a href="#" id="mobileAccountSettingsLink">Account Settings</a>
   </div>
   <div class="footer-divider"></div>
   <div class="footer-menu-section"><h3>Services</h3><a href="#">Check Reordering</a></div>
@@ -579,8 +585,8 @@
       <a class="sidebar-link" href="#"><span class="icon">📄</span> Statements</a>
       <a class="sidebar-link" href="#"><span class="icon">🗂️</span> Tax Forms</a>
       <a class="sidebar-link" href="#"><span class="icon">🔔</span> Alerts</a>
-      <a class="sidebar-link" href="#"><span class="icon">⚙️</span> Manage Accounts</a>
-      <a class="sidebar-link" href="#"><span class="icon">🔧</span> Account Settings</a>
+      <a class="sidebar-link" href="#" id="desktopManageAccountsLink"><span class="icon">⚙️</span> Manage Accounts</a>
+      <a class="sidebar-link" href="#" id="desktopAccountSettingsLink"><span class="icon">🔧</span> Account Settings</a>
     </div>
     <div class="sidebar-divider"></div>
     <div class="sidebar-section">
@@ -613,22 +619,22 @@
       <div class="balance-card checking">
         <div class="bc-label">Checking</div>
         <div class="bc-name">Gary Langley's checking</div>
-        <div class="bc-amount">$17,102.83</div>
-        <div class="bc-avail">Available: $17,082.83</div>
+        <div class="bc-amount" id="desktopCheckingAmount">$17,102.83</div>
+        <div class="bc-avail" id="desktopCheckingAvail">Available: $17,082.83</div>
         <div class="bc-acct">Acct #10896 &bull; 1089-71 &bull; Open 12/17/2009</div>
       </div>
       <div class="balance-card savings">
         <div class="bc-label">Savings</div>
         <div class="bc-name">Gary Langley's savings</div>
-        <div class="bc-amount">$30,158.60</div>
-        <div class="bc-avail">Available: $30,133.60</div>
+        <div class="bc-amount" id="desktopSavingsAmount">$30,158.60</div>
+        <div class="bc-avail" id="desktopSavingsAvail">Available: $30,133.60</div>
         <div class="bc-acct">1089-0</div>
       </div>
       <div class="balance-card vacation">
         <div class="bc-label">Savings</div>
         <div class="bc-name">Vacation fund</div>
-        <div class="bc-amount">$14,072.29</div>
-        <div class="bc-avail">Available: $14,047.29</div>
+        <div class="bc-amount" id="desktopVacationAmount">$14,072.29</div>
+        <div class="bc-avail" id="desktopVacationAvail">Available: $14,047.29</div>
         <div class="bc-acct">2787-0</div>
       </div>
     </div>
@@ -651,52 +657,7 @@
               <th class="right">Balance</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td><div class="txn-name">CHECK DEPOSIT - HALL LAW FIRM</div></td>
-              <td class="txn-date">2/19/2026</td>
-              <td class="txn-amt amount-credit">$2,000.00</td>
-              <td class="txn-bal">$17,102.83</td>
-            </tr>
-            <tr>
-              <td><div class="txn-name">DEPOSIT - ESTATE OF DENNIS LANGLEY</div></td>
-              <td class="txn-date">2/19/2026</td>
-              <td class="txn-amt amount-credit">$5,000.00</td>
-              <td class="txn-bal">$15,102.83</td>
-            </tr>
-            <tr>
-              <td><div class="txn-name">OUT BY CASH</div></td>
-              <td class="txn-date">2/19/2026</td>
-              <td class="txn-amt amount-debit">-$30.00</td>
-              <td class="txn-bal">$10,102.83</td>
-            </tr>
-            <tr>
-              <td>
-                <div class="txn-name">AMAZON.COM SEATTLE WA</div>
-                <div class="txn-sub">AMAZON.COM*KX44I2WM3</div>
-              </td>
-              <td class="txn-date">2/19/2026</td>
-              <td class="txn-amt amount-debit">-$85.04</td>
-              <td class="txn-bal">$10,132.83</td>
-            </tr>
-            <tr>
-              <td>
-                <div class="txn-name">WM SUPERCENTER #1271</div>
-                <div class="txn-sub">2400 Highway 19 N, Meridian MS</div>
-              </td>
-              <td class="txn-date">2/18/2026</td>
-              <td class="txn-amt amount-debit">-$92.33</td>
-              <td class="txn-bal">$10,217.87</td>
-            </tr>
-            <tr>
-              <td>
-                <div class="txn-name">CASH APP*GARY LANGLEY</div>
-                <div class="txn-sub">Oakland CA</div>
-              </td>
-              <td class="txn-date">2/18/2026</td>
-              <td class="txn-amt amount-credit">$20.00</td>
-              <td class="txn-bal">$10,310.20</td>
-            </tr>
+          <tbody id="desktopTransactionsBody">
           </tbody>
         </table>
       </div>
@@ -707,22 +668,8 @@
         <!-- Account Summary -->
         <div class="panel">
           <div class="panel-header"><h3>Account Summary</h3></div>
-          <table class="as-table">
+          <table class="as-table" id="desktopSummaryTable">
             <tr class="as-head"><td>Account</td><td>Current / Available</td></tr>
-            <tr class="as-grp"><td colspan="2">Account: 1089</td></tr>
-            <tr><td class="as-main">Gary Langley's savings</td><td>$30,158.60</td></tr>
-            <tr class="as-sub"><td>Suffix 0 — Available</td><td>$30,133.60</td></tr>
-            <tr><td class="as-main">Christmas Club</td><td>$50.01</td></tr>
-            <tr class="as-sub"><td>Suffix 51 — Available</td><td>$50.01</td></tr>
-            <tr><td class="as-main">ESCROW</td><td>$430.95</td></tr>
-            <tr class="as-sub"><td>Suffix 52 — Available</td><td>$0.00</td></tr>
-            <tr><td class="as-main">Gary Langley's checking</td><td>$17,102.83</td></tr>
-            <tr class="as-sub"><td>Suffix 71 — Available</td><td>$17,082.83</td></tr>
-            <tr><td class="as-main">MORTGAGE LOAN</td><td>$11,779.55</td></tr>
-            <tr class="as-sub"><td>Suffix 31 — Available</td><td>$0.00</td></tr>
-            <tr class="as-grp"><td colspan="2">Account: 2787</td></tr>
-            <tr><td class="as-main">Vacation fund</td><td>$14,072.29</td></tr>
-            <tr class="as-sub"><td>Suffix 0 — Available</td><td>$14,047.29</td></tr>
           </table>
         </div>
 
@@ -782,6 +729,423 @@
 
   </main>
 </div><!-- /desktop-layout -->
+
+
+<!-- ══════════════════════════════════════
+     MODAL: ACCOUNT SETTINGS (checking activity)
+══════════════════════════════════════ -->
+<div class="modal-overlay" id="accountSettingsModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h2>Account Settings</h2>
+      <span class="modal-close" data-close="accountSettingsModal">✕</span>
+    </div>
+    <p class="modal-sub">Add or delete entries for Gary Langley's checking. The balance updates automatically.</p>
+
+    <div class="modal-section">
+      <div id="modalTxnList" class="modal-txn-list"></div>
+
+      <button type="button" class="modal-add-btn" id="showAddTxnFormBtn">+ Add Entry</button>
+
+      <div id="addTxnForm" class="modal-add-form" style="display:none;">
+        <div class="modal-label">Date</div>
+        <input type="date" id="newTxnDate" class="modal-input">
+        <div class="modal-label">Description</div>
+        <input type="text" id="newTxnDesc" class="modal-input" placeholder="e.g. GROCERY STORE #123">
+        <div class="modal-label">Type</div>
+        <select id="newTxnType" class="modal-input">
+          <option value="debit">Debit (money out)</option>
+          <option value="credit">Credit (money in)</option>
+        </select>
+        <div class="modal-label">Amount</div>
+        <input type="number" id="newTxnAmount" class="modal-input" min="0" step="0.01" placeholder="0.00">
+        <div class="modal-add-actions">
+          <button type="button" class="modal-btn-secondary" id="cancelAddTxnBtn">Cancel</button>
+          <button type="button" class="modal-btn-primary" id="confirmAddTxnBtn">Add</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="modal-btn-secondary" id="cancelAccountSettingsBtn">Cancel</button>
+      <button type="button" class="modal-btn-primary" id="saveAccountSettingsBtn">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     MODAL: MANAGE ACCOUNTS (savings / christmas club / escrow / mortgage)
+══════════════════════════════════════ -->
+<div class="modal-overlay" id="manageAccountsModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h2>Manage Accounts</h2>
+      <span class="modal-close" data-close="manageAccountsModal">✕</span>
+    </div>
+    <p class="modal-sub">Update balances for your other accounts. Checking is managed under Account Settings.</p>
+
+    <div class="modal-section">
+      <div class="modal-section-title">Gary Langley's savings</div>
+      <div class="modal-label">Current Balance</div>
+      <input type="number" id="maSavingsCurrent" class="modal-input" step="0.01">
+      <div class="modal-label">Available Balance</div>
+      <input type="number" id="maSavingsAvailable" class="modal-input" step="0.01">
+    </div>
+
+    <div class="modal-section">
+      <div class="modal-section-title">Christmas Club</div>
+      <div class="modal-label">Current Balance</div>
+      <input type="number" id="maChristmasCurrent" class="modal-input" step="0.01">
+      <div class="modal-label">Available Balance</div>
+      <input type="number" id="maChristmasAvailable" class="modal-input" step="0.01">
+    </div>
+
+    <div class="modal-section">
+      <div class="modal-section-title">ESCROW</div>
+      <div class="modal-label">Current Balance</div>
+      <input type="number" id="maEscrowCurrent" class="modal-input" step="0.01">
+      <div class="modal-label">Available Balance</div>
+      <input type="number" id="maEscrowAvailable" class="modal-input" step="0.01">
+    </div>
+
+    <div class="modal-section">
+      <div class="modal-section-title">MORTGAGE LOAN</div>
+      <div class="modal-label">Current Balance</div>
+      <input type="number" id="maMortgageCurrent" class="modal-input" step="0.01">
+      <div class="modal-label">Available Balance</div>
+      <input type="number" id="maMortgageAvailable" class="modal-input" step="0.01">
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="modal-btn-secondary" id="cancelManageAccountsBtn">Cancel</button>
+      <button type="button" class="modal-btn-primary" id="saveManageAccountsBtn">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  // ─────────────────────────────────────────
+  // DATA MODEL
+  // ─────────────────────────────────────────
+  let checkingData = {
+    startingBalance: 10290.20,   // balance immediately before the oldest listed transaction
+    pendingHold: 20.00,          // difference between current and available balance
+    transactions: [
+      { id: 1, date: '2026-02-18', description: "CASH APP*GARY LANGLEY*C Oakland CA CASH APP*GARY L", amount: 20.00 },
+      { id: 2, date: '2026-02-18', description: "WM SUPERCENTER #1271 — 2400 Highway 19 N, Meridian MS", amount: -92.33 },
+      { id: 3, date: '2026-02-19', description: "AMAZON.COM SEATTLE WA AMAZON.COM*KX44I2WM3", amount: -85.04 },
+      { id: 4, date: '2026-02-19', description: "OUT BY CASH", amount: -30.00 },
+      { id: 5, date: '2026-02-19', description: "DEPOSIT - ESTATE OF DENNIS LANGLEY", amount: 5000.00 },
+      { id: 6, date: '2026-02-19', description: "CHECK DEPOSIT - HALL LAW FIRM", amount: 2000.00 }
+    ]
+  };
+  let nextTxnId = 7;
+
+  let otherAccounts = {
+    savings:   { name: "Gary Langley's savings", suffix: '0',  current: 30158.60, available: 30133.60 },
+    christmas: { name: "Christmas Club",         suffix: '51', current: 50.01,    available: 50.01 },
+    escrow:    { name: "ESCROW",                 suffix: '52', current: 430.95,   available: 0.00 },
+    mortgage:  { name: "MORTGAGE LOAN",          suffix: '31', current: 11779.55, available: 0.00 }
+  };
+  const vacationAccount = { name: "Vacation fund", suffix: '0', current: 14072.29, available: 14047.29 };
+
+  let workingTransactions = [];
+
+  // ─────────────────────────────────────────
+  // HELPERS
+  // ─────────────────────────────────────────
+  function formatCurrency(n) {
+    const neg = n < 0;
+    const abs = Math.abs(n).toFixed(2);
+    const parts = abs.split('.');
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return (neg ? '-' : '') + '$' + parts.join('.');
+  }
+
+  function formatDateDisplay(iso) {
+    const [y, m, d] = iso.split('-');
+    return `${parseInt(m, 10)}/${parseInt(d, 10)}/${y}`;
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str == null ? '' : String(str);
+    return div.innerHTML;
+  }
+
+  function getSortedAscending(list) {
+    return [...list].sort((a, b) => (a.date === b.date ? a.id - b.id : a.date.localeCompare(b.date)));
+  }
+
+  function computeChecking() {
+    const sorted = getSortedAscending(checkingData.transactions);
+    let bal = checkingData.startingBalance;
+    const withBalance = sorted.map(t => {
+      bal += t.amount;
+      return { ...t, runningBalance: bal };
+    });
+    return { ascending: withBalance, current: bal, available: bal - checkingData.pendingHold };
+  }
+
+  // ─────────────────────────────────────────
+  // RENDERING
+  // ─────────────────────────────────────────
+  function renderAll() {
+    const { ascending, current, available } = computeChecking();
+    const descending = [...ascending].reverse();
+
+    document.getElementById('mobileCurrentBalance').textContent = formatCurrency(current);
+    document.getElementById('mobileAvailableBalance').textContent = formatCurrency(available);
+    document.getElementById('desktopCheckingAmount').textContent = formatCurrency(current);
+    document.getElementById('desktopCheckingAvail').textContent = 'Available: ' + formatCurrency(available);
+
+    const mobileTxnContainer = document.getElementById('mobileTransactions');
+    if (descending.length === 0) {
+      mobileTxnContainer.innerHTML = '<div style="padding:20px 16px;text-align:center;font-size:13px;color:#aaa;font-style:italic;">No transactions to show.</div>';
+    } else {
+      mobileTxnContainer.innerHTML = descending.map(t => `
+        <div class="transaction">
+          <div class="transaction-top">
+            <div class="transaction-name">${escapeHtml(t.description)}</div>
+            <div class="transaction-amount ${t.amount < 0 ? 'amount-debit' : 'amount-credit'}">${formatCurrency(t.amount)}</div>
+          </div>
+          <div class="transaction-bottom">
+            <span class="transaction-date">${formatDateDisplay(t.date)}</span>
+            <span class="transaction-balance">${formatCurrency(t.runningBalance)}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    const deskBody = document.getElementById('desktopTransactionsBody');
+    if (descending.length === 0) {
+      deskBody.innerHTML = '<tr><td colspan="4" style="padding:20px;text-align:center;font-size:13px;color:#aaa;font-style:italic;">No transactions to show.</td></tr>';
+    } else {
+      deskBody.innerHTML = descending.map(t => `
+        <tr>
+          <td><div class="txn-name">${escapeHtml(t.description)}</div></td>
+          <td class="txn-date">${formatDateDisplay(t.date)}</td>
+          <td class="txn-amt ${t.amount < 0 ? 'amount-debit' : 'amount-credit'}">${formatCurrency(t.amount)}</td>
+          <td class="txn-bal">${formatCurrency(t.runningBalance)}</td>
+        </tr>
+      `).join('');
+    }
+
+    renderSummaries(current, available);
+  }
+
+  function renderSummaries(checkingCurrent, checkingAvailable) {
+    const sections = [
+      {
+        group: 'Account: 1089',
+        rows: [
+          otherAccounts.savings,
+          otherAccounts.christmas,
+          otherAccounts.escrow,
+          { name: "Gary Langley's checking", suffix: '71', current: checkingCurrent, available: checkingAvailable },
+          otherAccounts.mortgage
+        ]
+      },
+      { group: 'Account: 2787', rows: [vacationAccount] }
+    ];
+
+    // Mobile summary
+    let mobileHtml = '';
+    sections.forEach(section => {
+      mobileHtml += `<div class="account-group-header">${escapeHtml(section.group)}</div>`;
+      section.rows.forEach(r => {
+        mobileHtml += `
+          <div class="summary-row"><div class="summary-row-name">${escapeHtml(r.name)}</div><div class="summary-row-amount">${formatCurrency(r.current)}</div></div>
+          <div class="summary-sub-row"><span class="summary-sub-suffix">${escapeHtml(r.suffix)}</span><span class="summary-sub-amount">${formatCurrency(r.available)}</span></div>
+        `;
+      });
+    });
+    document.getElementById('mobileSummaryBody').innerHTML = mobileHtml;
+
+    // Desktop summary
+    const deskTable = document.getElementById('desktopSummaryTable');
+    [...deskTable.querySelectorAll('tr:not(.as-head)')].forEach(r => r.remove());
+    let deskHtml = '';
+    sections.forEach(section => {
+      deskHtml += `<tr class="as-grp"><td colspan="2">${escapeHtml(section.group)}</td></tr>`;
+      section.rows.forEach(r => {
+        deskHtml += `
+          <tr><td class="as-main">${escapeHtml(r.name)}</td><td>${formatCurrency(r.current)}</td></tr>
+          <tr class="as-sub"><td>Suffix ${escapeHtml(r.suffix)} — Available</td><td>${formatCurrency(r.available)}</td></tr>
+        `;
+      });
+    });
+    deskTable.insertAdjacentHTML('beforeend', deskHtml);
+
+    // Balance cards
+    document.getElementById('desktopSavingsAmount').textContent = formatCurrency(otherAccounts.savings.current);
+    document.getElementById('desktopSavingsAvail').textContent = 'Available: ' + formatCurrency(otherAccounts.savings.available);
+    document.getElementById('desktopVacationAmount').textContent = formatCurrency(vacationAccount.current);
+    document.getElementById('desktopVacationAvail').textContent = 'Available: ' + formatCurrency(vacationAccount.available);
+  }
+
+  function renderModalTxnList() {
+    const container = document.getElementById('modalTxnList');
+    const sorted = getSortedAscending(workingTransactions).reverse();
+    if (sorted.length === 0) {
+      container.innerHTML = '<div class="modal-txn-empty">No entries. Use "+ Add Entry" below.</div>';
+      return;
+    }
+    container.innerHTML = sorted.map(t => `
+      <div class="modal-txn-row" data-id="${t.id}">
+        <div class="modal-txn-info">
+          <div class="modal-txn-desc">${escapeHtml(t.description)}</div>
+          <div class="modal-txn-meta">${formatDateDisplay(t.date)} &bull; ${formatCurrency(t.amount)}</div>
+        </div>
+        <span class="modal-txn-delete" data-id="${t.id}" title="Delete entry">🗑️</span>
+      </div>
+    `).join('');
+  }
+
+  // ─────────────────────────────────────────
+  // MODAL CONTROLS
+  // ─────────────────────────────────────────
+  function openModal(id) { document.getElementById(id).classList.add('active'); }
+  function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+  function openAccountSettingsModal() {
+    workingTransactions = checkingData.transactions.map(t => ({ ...t }));
+    document.getElementById('addTxnForm').style.display = 'none';
+    renderModalTxnList();
+    openModal('accountSettingsModal');
+  }
+
+  function openManageAccountsModal() {
+    document.getElementById('maSavingsCurrent').value = otherAccounts.savings.current.toFixed(2);
+    document.getElementById('maSavingsAvailable').value = otherAccounts.savings.available.toFixed(2);
+    document.getElementById('maChristmasCurrent').value = otherAccounts.christmas.current.toFixed(2);
+    document.getElementById('maChristmasAvailable').value = otherAccounts.christmas.available.toFixed(2);
+    document.getElementById('maEscrowCurrent').value = otherAccounts.escrow.current.toFixed(2);
+    document.getElementById('maEscrowAvailable').value = otherAccounts.escrow.available.toFixed(2);
+    document.getElementById('maMortgageCurrent').value = otherAccounts.mortgage.current.toFixed(2);
+    document.getElementById('maMortgageAvailable').value = otherAccounts.mortgage.available.toFixed(2);
+    openModal('manageAccountsModal');
+  }
+
+  // Generic close (X button + overlay click)
+  document.querySelectorAll('.modal-close').forEach(el => {
+    el.addEventListener('click', () => closeModal(el.dataset.close));
+  });
+  document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', e => {
+      if (e.target === overlay) closeModal(overlay.id);
+    });
+  });
+
+  // Sidebar / footer-menu link triggers
+  ['mobileAccountSettingsLink', 'desktopAccountSettingsLink'].forEach(id => {
+    document.getElementById(id).addEventListener('click', e => {
+      e.preventDefault();
+      openAccountSettingsModal();
+    });
+  });
+  ['mobileManageAccountsLink', 'desktopManageAccountsLink'].forEach(id => {
+    document.getElementById(id).addEventListener('click', e => {
+      e.preventDefault();
+      openManageAccountsModal();
+    });
+  });
+
+  // ─────────────────────────────────────────
+  // ACCOUNT SETTINGS MODAL LOGIC
+  // ─────────────────────────────────────────
+  document.getElementById('modalTxnList').addEventListener('click', e => {
+    if (e.target.classList.contains('modal-txn-delete')) {
+      const id = parseInt(e.target.dataset.id, 10);
+      workingTransactions = workingTransactions.filter(t => t.id !== id);
+      renderModalTxnList();
+    }
+  });
+
+  document.getElementById('showAddTxnFormBtn').addEventListener('click', () => {
+    document.getElementById('newTxnDate').value = new Date().toISOString().split('T')[0];
+    document.getElementById('newTxnDesc').value = '';
+    document.getElementById('newTxnType').value = 'debit';
+    document.getElementById('newTxnAmount').value = '';
+    document.getElementById('addTxnForm').style.display = 'block';
+  });
+
+  document.getElementById('cancelAddTxnBtn').addEventListener('click', () => {
+    document.getElementById('addTxnForm').style.display = 'none';
+  });
+
+  document.getElementById('confirmAddTxnBtn').addEventListener('click', () => {
+    const date = document.getElementById('newTxnDate').value;
+    const desc = document.getElementById('newTxnDesc').value.trim();
+    const type = document.getElementById('newTxnType').value;
+    const amtRaw = parseFloat(document.getElementById('newTxnAmount').value);
+
+    if (!date || !desc || isNaN(amtRaw) || amtRaw <= 0) {
+      alert('Please enter a valid date, description, and amount greater than 0.');
+      return;
+    }
+
+    const amount = type === 'debit' ? -Math.abs(amtRaw) : Math.abs(amtRaw);
+    workingTransactions.push({ id: nextTxnId++, date, description: desc, amount });
+    document.getElementById('addTxnForm').style.display = 'none';
+    renderModalTxnList();
+  });
+
+  document.getElementById('saveAccountSettingsBtn').addEventListener('click', () => {
+    checkingData.transactions = workingTransactions.map(t => ({ ...t }));
+    renderAll();
+    closeModal('accountSettingsModal');
+  });
+
+  document.getElementById('cancelAccountSettingsBtn').addEventListener('click', () => {
+    closeModal('accountSettingsModal');
+  });
+
+  // ─────────────────────────────────────────
+  // MANAGE ACCOUNTS MODAL LOGIC
+  // ─────────────────────────────────────────
+  document.getElementById('saveManageAccountsBtn').addEventListener('click', () => {
+    const fieldMap = {
+      savings:   ['maSavingsCurrent', 'maSavingsAvailable'],
+      christmas: ['maChristmasCurrent', 'maChristmasAvailable'],
+      escrow:    ['maEscrowCurrent', 'maEscrowAvailable'],
+      mortgage:  ['maMortgageCurrent', 'maMortgageAvailable']
+    };
+
+    const parsed = {};
+    for (const key in fieldMap) {
+      const [curId, availId] = fieldMap[key];
+      const cur = parseFloat(document.getElementById(curId).value);
+      const avail = parseFloat(document.getElementById(availId).value);
+      if (isNaN(cur) || isNaN(avail)) {
+        alert('Please enter valid numbers for all balance fields.');
+        return;
+      }
+      parsed[key] = { cur, avail };
+    }
+
+    for (const key in fieldMap) {
+      otherAccounts[key].current = parsed[key].cur;
+      otherAccounts[key].available = parsed[key].avail;
+    }
+
+    renderAll();
+    closeModal('manageAccountsModal');
+  });
+
+  document.getElementById('cancelManageAccountsBtn').addEventListener('click', () => {
+    closeModal('manageAccountsModal');
+  });
+
+  // ─────────────────────────────────────────
+  // INIT
+  // ─────────────────────────────────────────
+  renderAll();
+})();
+</script>
 
 </body>
 </html>
