@@ -619,14 +619,14 @@
         <div class="bc-label">Savings</div>
         <div class="bc-name">Gary Langley's savings</div>
         <div class="bc-amount" id="desktopSavingsAmount">$30,158.60</div>
-        <div class="bc-avail" id="desktopSavingsAvail">Available: $30,133.60</div>
+        <div class="bc-avail" id="desktopSavingsAvail">Available: $30,138.60</div>
         <div class="bc-acct">1089-0</div>
       </div>
       <div class="balance-card vacation">
         <div class="bc-label">Savings</div>
         <div class="bc-name">Vacation fund</div>
         <div class="bc-amount" id="desktopVacationAmount">$14,072.29</div>
-        <div class="bc-avail" id="desktopVacationAvail">Available: $14,047.29</div>
+        <div class="bc-avail" id="desktopVacationAvail">Available: $14,052.29</div>
         <div class="bc-acct">2787-0</div>
       </div>
     </div>
@@ -756,7 +756,7 @@
 </div>
 
 <!-- ══════════════════════════════════════
-     MODAL: MANAGE ACCOUNTS (savings / christmas club / escrow / mortgage)
+     MODAL: MANAGE ACCOUNTS (savings / christmas club / escrow / mortgage / vacation)
 ══════════════════════════════════════ -->
 <div class="modal-overlay" id="manageAccountsModal">
   <div class="modal-box">
@@ -764,38 +764,36 @@
       <h2>Manage Accounts</h2>
       <span class="modal-close" data-close="manageAccountsModal">✕</span>
     </div>
-    <p class="modal-sub">Update balances for your other accounts. Checking is managed under Account Settings.</p>
+    <p class="modal-sub">Update the current balance for your other accounts. Available balance is calculated automatically — a $20 hold for savings-type accounts, no hold for Christmas Club, and escrow/mortgage funds are never available. Checking is managed under Account Settings.</p>
 
     <div class="modal-section">
       <div class="modal-section-title">Gary Langley's savings</div>
       <div class="modal-label">Current Balance</div>
       <input type="number" id="maSavingsCurrent" class="modal-input" step="0.01">
-      <div class="modal-label">Available Balance</div>
-      <input type="number" id="maSavingsAvailable" class="modal-input" step="0.01">
     </div>
 
     <div class="modal-section">
       <div class="modal-section-title">Christmas Club</div>
       <div class="modal-label">Current Balance</div>
       <input type="number" id="maChristmasCurrent" class="modal-input" step="0.01">
-      <div class="modal-label">Available Balance</div>
-      <input type="number" id="maChristmasAvailable" class="modal-input" step="0.01">
     </div>
 
     <div class="modal-section">
       <div class="modal-section-title">ESCROW</div>
       <div class="modal-label">Current Balance</div>
       <input type="number" id="maEscrowCurrent" class="modal-input" step="0.01">
-      <div class="modal-label">Available Balance</div>
-      <input type="number" id="maEscrowAvailable" class="modal-input" step="0.01">
     </div>
 
     <div class="modal-section">
       <div class="modal-section-title">MORTGAGE LOAN</div>
       <div class="modal-label">Current Balance</div>
       <input type="number" id="maMortgageCurrent" class="modal-input" step="0.01">
-      <div class="modal-label">Available Balance</div>
-      <input type="number" id="maMortgageAvailable" class="modal-input" step="0.01">
+    </div>
+
+    <div class="modal-section">
+      <div class="modal-section-title">Vacation fund</div>
+      <div class="modal-label">Current Balance</div>
+      <input type="number" id="maVacationCurrent" class="modal-input" step="0.01">
     </div>
 
     <div class="modal-footer">
@@ -826,24 +824,44 @@
   };
   let nextTxnId = 7;
 
-  let otherAccounts = {
-    savings:   { name: "Gary Langley's savings", suffix: '0',  current: 30158.60, available: 30133.60 },
-    christmas: { name: "Christmas Club",         suffix: '51', current: 50.01,    available: 50.01 },
-    escrow:    { name: "ESCROW",                 suffix: '52', current: 430.95,   available: 0.00 },
-    mortgage:  { name: "MORTGAGE LOAN",          suffix: '31', current: 11779.55, available: 0.00 }
+  // Fixed metadata + hold rule per non-checking account.
+  // hold: a dollar amount subtracted from current to get available,
+  // or 'all' meaning the full balance is held (available is always $0).
+  const ACCOUNT_CONFIG = {
+    savings:   { name: "Gary Langley's savings", suffix: '0',  group: 'Account: 1089', hold: 20 },
+    christmas: { name: "Christmas Club",         suffix: '51', group: 'Account: 1089', hold: 0 },
+    escrow:    { name: "ESCROW",                 suffix: '52', group: 'Account: 1089', hold: 'all' },
+    mortgage:  { name: "MORTGAGE LOAN",          suffix: '31', group: 'Account: 1089', hold: 'all' },
+    vacation:  { name: "Vacation fund",          suffix: '0',  group: 'Account: 2787', hold: 20 }
   };
-  const vacationAccount = { name: "Vacation fund", suffix: '0', current: 14072.29, available: 14047.29 };
+
+  // Only the current balance is stored; available is always derived.
+  let otherAccounts = {
+    savings:   { current: 30158.60 },
+    christmas: { current: 50.01 },
+    escrow:    { current: 430.95 },
+    mortgage:  { current: 11779.55 },
+    vacation:  { current: 14072.29 }
+  };
+
+  function computeAvailable(key, current) {
+    const cfg = ACCOUNT_CONFIG[key];
+    if (!cfg) return current;
+    if (cfg.hold === 'all') return 0;
+    return current - cfg.hold;
+  }
 
   let workingTransactions = [];
 
   const STORAGE_KEY = 'meridianBankData';
+  const STORAGE_VERSION = 2; // bump whenever the stored data shape or defaults change
 
   // ─────────────────────────────────────────
   // PERSISTENCE (browser local storage)
   // ─────────────────────────────────────────
   function saveStateToStorage() {
     try {
-      const state = { checkingData, otherAccounts, nextTxnId };
+      const state = { version: STORAGE_VERSION, checkingData, otherAccounts, nextTxnId };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     } catch (e) {
       console.warn('Could not save data locally:', e);
@@ -855,13 +873,18 @@
       const raw = localStorage.getItem(STORAGE_KEY);
       if (!raw) return;
       const state = JSON.parse(raw);
-      if (state && state.checkingData && Array.isArray(state.checkingData.transactions)) {
+      if (!state || state.version !== STORAGE_VERSION) {
+        // Data was saved by an older version of this page (different defaults/shape) — start fresh.
+        localStorage.removeItem(STORAGE_KEY);
+        return;
+      }
+      if (state.checkingData && Array.isArray(state.checkingData.transactions)) {
         checkingData = state.checkingData;
       }
-      if (state && state.otherAccounts) {
+      if (state.otherAccounts) {
         otherAccounts = state.otherAccounts;
       }
-      if (state && typeof state.nextTxnId === 'number') {
+      if (typeof state.nextTxnId === 'number') {
         nextTxnId = state.nextTxnId;
       }
     } catch (e) {
@@ -955,11 +978,11 @@
 
   function renderQuickTransferOptions(checkingAvailable) {
     const accounts = [
-      { key: 'savings',   label: "Gary Langley's savings (1089-0)",   available: otherAccounts.savings.available },
-      { key: 'christmas', label: "Christmas Club (1089-51)",          available: otherAccounts.christmas.available },
-      { key: 'escrow',    label: "ESCROW (1089-52)",                  available: otherAccounts.escrow.available },
+      { key: 'savings',   label: "Gary Langley's savings (1089-0)",   available: computeAvailable('savings', otherAccounts.savings.current) },
+      { key: 'christmas', label: "Christmas Club (1089-51)",          available: computeAvailable('christmas', otherAccounts.christmas.current) },
+      { key: 'escrow',    label: "ESCROW (1089-52)",                  available: computeAvailable('escrow', otherAccounts.escrow.current) },
       { key: 'checking',  label: "Gary Langley's checking (1089-71)", available: checkingAvailable },
-      { key: 'vacation',  label: "Vacation fund (2787-0)",            available: vacationAccount.available }
+      { key: 'vacation',  label: "Vacation fund (2787-0)",            available: computeAvailable('vacation', otherAccounts.vacation.current) }
     ];
 
     ['mobileTransferFrom', 'mobileTransferTo', 'desktopTransferFrom', 'desktopTransferTo'].forEach(id => {
@@ -971,18 +994,24 @@
   }
 
   function renderSummaries(checkingCurrent, checkingAvailable) {
+    function row(key) {
+      const cfg = ACCOUNT_CONFIG[key];
+      const current = otherAccounts[key].current;
+      return { name: cfg.name, suffix: cfg.suffix, current, available: computeAvailable(key, current) };
+    }
+
     const sections = [
       {
         group: 'Account: 1089',
         rows: [
-          otherAccounts.savings,
-          otherAccounts.christmas,
-          otherAccounts.escrow,
+          row('savings'),
+          row('christmas'),
+          row('escrow'),
           { name: "Gary Langley's checking", suffix: '71', current: checkingCurrent, available: checkingAvailable },
-          otherAccounts.mortgage
+          row('mortgage')
         ]
       },
-      { group: 'Account: 2787', rows: [vacationAccount] }
+      { group: 'Account: 2787', rows: [row('vacation')] }
     ];
 
     // Mobile summary
@@ -1015,9 +1044,9 @@
 
     // Balance cards
     document.getElementById('desktopSavingsAmount').textContent = formatCurrency(otherAccounts.savings.current);
-    document.getElementById('desktopSavingsAvail').textContent = 'Available: ' + formatCurrency(otherAccounts.savings.available);
-    document.getElementById('desktopVacationAmount').textContent = formatCurrency(vacationAccount.current);
-    document.getElementById('desktopVacationAvail').textContent = 'Available: ' + formatCurrency(vacationAccount.available);
+    document.getElementById('desktopSavingsAvail').textContent = 'Available: ' + formatCurrency(computeAvailable('savings', otherAccounts.savings.current));
+    document.getElementById('desktopVacationAmount').textContent = formatCurrency(otherAccounts.vacation.current);
+    document.getElementById('desktopVacationAvail').textContent = 'Available: ' + formatCurrency(computeAvailable('vacation', otherAccounts.vacation.current));
   }
 
   function renderModalTxnList() {
@@ -1053,13 +1082,10 @@
 
   function openManageAccountsModal() {
     document.getElementById('maSavingsCurrent').value = otherAccounts.savings.current.toFixed(2);
-    document.getElementById('maSavingsAvailable').value = otherAccounts.savings.available.toFixed(2);
     document.getElementById('maChristmasCurrent').value = otherAccounts.christmas.current.toFixed(2);
-    document.getElementById('maChristmasAvailable').value = otherAccounts.christmas.available.toFixed(2);
     document.getElementById('maEscrowCurrent').value = otherAccounts.escrow.current.toFixed(2);
-    document.getElementById('maEscrowAvailable').value = otherAccounts.escrow.available.toFixed(2);
     document.getElementById('maMortgageCurrent').value = otherAccounts.mortgage.current.toFixed(2);
-    document.getElementById('maMortgageAvailable').value = otherAccounts.mortgage.available.toFixed(2);
+    document.getElementById('maVacationCurrent').value = otherAccounts.vacation.current.toFixed(2);
     openModal('manageAccountsModal');
   }
 
@@ -1143,27 +1169,25 @@
   // ─────────────────────────────────────────
   document.getElementById('saveManageAccountsBtn').addEventListener('click', () => {
     const fieldMap = {
-      savings:   ['maSavingsCurrent', 'maSavingsAvailable'],
-      christmas: ['maChristmasCurrent', 'maChristmasAvailable'],
-      escrow:    ['maEscrowCurrent', 'maEscrowAvailable'],
-      mortgage:  ['maMortgageCurrent', 'maMortgageAvailable']
+      savings:   'maSavingsCurrent',
+      christmas: 'maChristmasCurrent',
+      escrow:    'maEscrowCurrent',
+      mortgage:  'maMortgageCurrent',
+      vacation:  'maVacationCurrent'
     };
 
     const parsed = {};
     for (const key in fieldMap) {
-      const [curId, availId] = fieldMap[key];
-      const cur = parseFloat(document.getElementById(curId).value);
-      const avail = parseFloat(document.getElementById(availId).value);
-      if (isNaN(cur) || isNaN(avail)) {
+      const cur = parseFloat(document.getElementById(fieldMap[key]).value);
+      if (isNaN(cur)) {
         alert('Please enter valid numbers for all balance fields.');
         return;
       }
-      parsed[key] = { cur, avail };
+      parsed[key] = cur;
     }
 
     for (const key in fieldMap) {
-      otherAccounts[key].current = parsed[key].cur;
-      otherAccounts[key].available = parsed[key].avail;
+      otherAccounts[key].current = parsed[key];
     }
 
     renderAll();
